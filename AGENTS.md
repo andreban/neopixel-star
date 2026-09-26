@@ -17,26 +17,27 @@ is and how to order it, and [PLAN.md](PLAN.md) for why it is designed this way.
 
 ## Two variants
 
-The same scripts build two boards, registered in `scripts/common/variants.py`:
+The same scripts build three boards, registered in `scripts/common/variants.py`:
 
 | Variant | Outputs | Scripts |
 |---|---|---|
 | `smd` | `smd/kicad/`, `smd/fab/`, `smd/easyeda/`, `smd/docs/` | `scripts/smd/` |
+| `hotplate` | `hotplate/kicad/`, `hotplate/fab/`, `hotplate/easyeda/`, `hotplate/docs/` | `scripts/hotplate/` |
 | `tht` | `tht/kicad/`, `tht/fab/`, `tht/easyeda/`, `tht/docs/` | `scripts/tht/` |
 
 Each variant's scripts are `parts.py` (the single source of truth for its parts, nets and BOM data),
 `layout.py` (placement and routing) and `schematic.py` (the sheet). Everything else is shared, in
-`scripts/common/`. A change to shared code must leave **both** variants clean. A change to one
+`scripts/common/`. A change to shared code must leave **all** variants clean. A change to one
 variant must not alter the other's outputs.
 
 ## Everything is generated
 
-`smd/` and `tht/` hold **build outputs**, except their `README.md` files. Never hand-edit them: the
+`smd/`, `hotplate/` and `tht/` hold **build outputs**, except their `README.md` files. Never hand-edit them: the
 next build overwrites the changes. Make changes in `scripts/`, then rebuild:
 
 ```sh
-python scripts/build_all.py          # both variants
-python scripts/build_all.py tht      # one variant: smd or tht
+python scripts/build_all.py          # all variants
+python scripts/build_all.py tht      # one variant: smd, hotplate or tht
 ```
 
 A change is done only when this build finishes. It runs ERC, DRC and schematic parity, and **exits on
@@ -87,6 +88,17 @@ offsets (`+v` = clockwise side of an LED) to board coordinates.
   Only J1 and U1 keep silkscreen. Don't add front silkscreen.
 - **Vias** are 0.3 mm drill / 0.6 mm pad. Both fabs make these at standard price. Enlarging them
   blocks the pour between the bottom LED's vias.
+
+## Constraints that aren't obvious (hot-plate)
+
+- **The point of the variant:** everything that needs paste is on the front; the back holds only
+  J1 and U1 (iron-solderable). Don't add paste parts to the back.
+- **Vias beside the LEDs, not under them.** A 3535 body has no room for two vias. DIN sits on the
+  LED's counter-clockwise side, DOUT and GND on its clockwise side. The space under each LED stays
+  free on the back so the GND pour flows through, and the ring of hops doesn't create islands.
+- **Hops run inward along the LED's side** before crossing to the notch. Cutting straight from a
+  long-point LED toward the notch passes too close to the edge.
+- **No per-LED capacitors** (WS2812B-MINI-V3 datasheet). U1 stays: DIN needs 0.63 × VDD.
 
 ## Constraints that aren't obvious (through-hole)
 

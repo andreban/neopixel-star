@@ -31,6 +31,10 @@ class Variant:
 
 VARIANTS = {
     "smd": Variant("smd", "neopixel-star", "", "NeoPixel Star", 50.0, 0.3, False),
+    # Hot-plate friendly: all small parts on the front, only J1 and U1 on the
+    # back. Front silkscreen kept: the LEDs are placed by hand onto paste.
+    "hotplate": Variant("hotplate", "neopixel-star-hotplate", "hotplate/", "NeoPixel Star (hot-plate)",
+                        50.0, 0.3, True),
     # 55 mm: at 50 mm the staggered LED pads only fit with the LEDs pulled in
     # so far that the top LED's leads end up under J1's housing. The 0.25 mm
     # pour clearance lets the pours pass between the staggered pads.

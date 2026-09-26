@@ -119,3 +119,20 @@ the original plan:
   on the back (VDD sits in each LED's outer pin row). Long-point LEDs at 14.0 mm, diagonals at 12.6 mm.
 - **Components on one side:** all on the front except J1. Two copper layers.
 - **Front silkscreen** is kept for hand assembly: an LED flat-side mark, and C1/R1 marks.
+
+## Hot-plate variant (built)
+
+Built into `hotplate/`; see `hotplate/README.md`. For home assembly: the front reflows on a hot plate
+with the back bare, then J1 and U1 go on the back with an iron.
+
+- **LEDs:** Worldsemi WS2812B-MINI-V3/W, 3535 (C527089): same pinout as the 5050 WS2812B, and no
+  per-LED capacitors needed (datasheet V3). Not SK6812MINI-**E**: that is a reverse-mount part.
+- **Size 50 mm** (user's choice of 3535 over growing the star). LEDs at 17.0 / 13.0 mm, further into
+  the points than the 5050 board.
+- **0603 passives** (user's choice): C1 10 µF (C19702), C2 100 nF (C14663), R1 330 Ω (C23138),
+  R2 100 kΩ (C25803). All on the front.
+- **Back:** J1 (SMD JST, same as the SMD board) and U1 (74AHCT1G125, kept because DIN needs
+  0.63 × VDD = 3.15 V). Same positions as the SMD board, so the artwork is identical.
+- **Front silkscreen kept:** LED outlines with pin-1 marks, for hand placement.
+- **LEDs are MSL 5a:** bake before reflow (documented in the README).
+
