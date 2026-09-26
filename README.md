@@ -150,3 +150,7 @@ check DRC after changing it.
 The board outline and back-side artwork use the Modern Web Guidance logo from
 [developer.chrome.com](https://developer.chrome.com/). Inspired by the
 [Adafruit NeoPixel Jewel](https://www.adafruit.com/product/2226).
+
+## License
+
+[Apache License 2.0](LICENSE).
