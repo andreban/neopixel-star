@@ -57,6 +57,6 @@ data order centre first, then clockwise from the top point. See the [main README
 
 ## Ordering
 
-`fab/neopixel-star-tht-gerbers.zip` with the same board options as the SMD version (2 layers,
-1.6 mm, yellow mask, black silkscreen, ENIG). Most through-hole builds are hand-soldered, but
+`fab/neopixel-star-tht-gerbers.zip` with the board options from the
+[main README](../README.md#ordering). Most through-hole builds are hand-soldered, but
 `fab/jlcpcb/` and `fab/pcbway/` have BOM and placement files for through-hole assembly too.

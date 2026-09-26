@@ -1,28 +1,6 @@
-"""Single source of truth for components: footprints, nets and BOM data.
-
-Used by the board and schematic generators and the BOM/CPL exporters.
-"""
-from dataclasses import dataclass, field
-
-
-@dataclass
-class Part:
-    lib: str                 # stock KiCad footprint library it was copied from
-    footprint: str
-    value: str
-    symbol: str              # stock KiCad symbol, "Lib:Name"
-    pins: dict               # pad/pin number -> net name (None = unconnected)
-    lcsc: str
-    mpn: str
-    manufacturer: str
-    description: str = ""
-    datasheet: str = ""
-    # When the stock symbol's pin numbering doesn't match the part: the name
-    # of the corrected copy in the project library, and stock -> real pin number.
-    symbol_name: str = ""
-    pin_numbers: dict = field(default_factory=dict)
-    nc_pin_name: str = "DOUT"   # symbol pin name of the unconnected pin (LED9's data out)
-
+"""SMD variant components: footprints, pin -> net maps and BOM data. The
+single source of truth for the board, schematic and BOM/CPL exports."""
+from common.parts import Part
 
 LED = dict(lib="LED_SMD", footprint="LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm", value="WS2812B",
            symbol="LED:WS2812B", lcsc="C2761795", mpn="WS2812B-B/T", manufacturer="Worldsemi",
@@ -39,14 +17,6 @@ def led_nets(i):
     """WS2812B pins: 1 VDD, 2 DOUT, 3 VSS, 4 DIN. LED(i+1) is chain position i."""
     return {"1": "+5V", "2": f"D{i + 1}" if i < 8 else None, "3": "GND",
             "4": "LED_DIN" if i == 0 else f"D{i}"}
-
-
-def board_net(net, ref=None, pad=None, pin_name=None):
-    """PCB net name as KiCad derives it from the schematic. Power symbols and
-    global labels give plain names; a no-connect pin gets a net of its own."""
-    if net is None:
-        return f"unconnected-({ref}-{pin_name or pad}-Pad{pad})"
-    return net
 
 
 PARTS = {}
@@ -74,13 +44,3 @@ PARTS.update({
                {"1": "+5V", "2": "DIN", "3": "GND", "MP": "GND"},
                "C265101", "S3B-PH-SM4-TB(LF)(SN)", "JST", "JST PH 2.0 mm 3-pin, SMD side entry"),
 })
-
-
-def uid(name, ns=""):
-    """Stable UUID so schematic symbols and PCB footprints link up (and the
-    generated files don't churn between runs). `ns` separates variants."""
-    import uuid
-    return str(uuid.uuid5(uuid.NAMESPACE_URL, "neopixel-star/" + ns + name))
-
-
-ROOT_SHEET = uid("root-sheet")

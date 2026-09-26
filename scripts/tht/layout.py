@@ -1,4 +1,4 @@
-"""Through-hole layout. Called from build_board.py main() with the "tht" variant.
+"""Through-hole layout (55 mm star). Called by scripts/build_board.py.
 
   front  9 x WS2812D-F5 (5 mm), bulk cap C1, series resistor R1, the input
          traces, solid +5V pour. All parts sit on the front and are soldered
@@ -17,9 +17,9 @@ import math
 
 import pcbnew
 
-import config as C
-from build_board import artwork, local
-from geometry import polar
+from common import config as C
+from common.board import artwork, local
+from common.geometry import polar
 
 # LED centres on the 55 mm star. The max that keeps the staggered pads 0.4 mm
 # from the edge is 15.3 / 13.0; the top LED must be >= 13.6 to keep its leads

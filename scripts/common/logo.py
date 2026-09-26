@@ -7,9 +7,9 @@ import os
 import re
 import xml.etree.ElementTree as ET
 
-from geometry import _bezier
+from common.geometry import _bezier
 
-SVG = os.path.join(os.path.dirname(__file__), "..", "reference", "mwg-logo.svg")
+SVG = os.path.join(os.path.dirname(__file__), "..", "..", "reference", "mwg-logo.svg")
 NS = "{http://www.w3.org/2000/svg}"
 
 

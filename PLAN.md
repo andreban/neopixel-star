@@ -62,9 +62,9 @@ will stay dark.
   resistors and bulk cap on the back.
 - Fabs: support **both JLCPCB and PCBWay** from one design. Silkscreen color is an order option, not part
   of the files, so the Gerbers are shared. Separate assembly packages:
-  - `fab/jlcpcb/`: Gerbers + BOM (LCSC part numbers) + CPL in JLCPCB format. Order with black silkscreen
+  - `smd/fab/jlcpcb/`: Gerbers + BOM (LCSC part numbers) + CPL in JLCPCB format. Order with black silkscreen
     if offered for yellow mask, otherwise white.
-  - `fab/pcbway/`: Gerbers + BOM (manufacturer part numbers) + centroid file in PCBWay format. Order with
+  - `smd/fab/pcbway/`: Gerbers + BOM (manufacturer part numbers) + centroid file in PCBWay format. Order with
     black silkscreen.
   - Parts are chosen to be available at both (common WS2812B/SK6812, 74AHCT1G125, JST S3B-PH-SM4-TB).
 - Connector: JST-PH 2.0 3-pin (5V / DIN / GND), SMD right-angle, on the back.
@@ -94,7 +94,7 @@ will stay dark.
   - `kicad-cli pcb drc` and `kicad-cli sch erc` must pass with zero errors.
   - `kicad-cli` exports the Gerbers, drill files, positions/BOM, and front/back renders for review.
   - EasyEDA copy is the KiCad 10 project zipped (EasyEDA's importer docs are dated; the import is untested).
-    Fallback: `easyeda/outline.dxf` + Gerbers.
+    Fallback: `smd/easyeda/outline.dxf` + Gerbers.
 
 ## Status
 Built: `python scripts/build_all.py` regenerates everything. ERC, DRC and schematic parity are clean.
@@ -102,7 +102,7 @@ Still to verify: the EasyEDA Pro import, and part rotations in the JLCPCB/PCBWay
 
 ## Through-hole variant (built)
 
-Built by the same scripts into `tht/`; see `tht/README.md`. Final decisions, with what changed from
+Built by the same scripts into `tht/` (the SMD board is in `smd/`); see `tht/README.md`. Final decisions, with what changed from
 the original plan:
 
 - **LEDs:** Worldsemi WS2812D-F5 (LCSC C190565). Datasheet pinout: 1 DOUT, 2 VDD, 3 GND, 4 DIN.

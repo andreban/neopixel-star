@@ -18,10 +18,10 @@ import zipfile
 from collections import defaultdict
 
 sys.path.insert(0, os.path.dirname(__file__))
-import config as C
-import variants
+from common import config as C
+from common import variants
 
-ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+ROOT = C.ROOT
 CLI = C.KICAD_CLI
 KPY = C.KICAD_PYTHON
 

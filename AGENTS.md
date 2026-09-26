@@ -9,7 +9,7 @@ is and how to order it, and [PLAN.md](PLAN.md) for why it is designed this way.
   - `kicad-cli`, for ERC, DRC, zone filling, Gerber/drill/position exports and renders;
   - KiCad's bundled Python, which provides `pcbnew`;
   - the stock symbol, footprint and 3D-model libraries, copied into the project libraries.
-- **Finding KiCad.** `scripts/config.py` looks in KiCad 10's standard install locations for Windows,
+- **Finding KiCad.** `scripts/common/config.py` looks in KiCad 10's standard install locations for Windows,
   macOS and Linux. If KiCad is installed elsewhere, set the `KICAD_DIR` environment variable to the
   installation directory: the folder containing `bin/` and `share/` on Windows and Linux,
   `KiCad.app/Contents` on macOS. Never hardcode a machine-specific path in the repo.
@@ -17,22 +17,22 @@ is and how to order it, and [PLAN.md](PLAN.md) for why it is designed this way.
 
 ## Two variants
 
-The same scripts build two boards, registered in `scripts/variants.py`:
+The same scripts build two boards, registered in `scripts/common/variants.py`:
 
-| Variant | Outputs | Parts | Layout |
-|---|---|---|---|
-| `smd` | repo root: `kicad/`, `fab/`, `easyeda/`, `docs/` | `parts.py` | `build_board.py` |
-| `tht` | `tht/kicad/`, `tht/fab/`, `tht/easyeda/`, `tht/docs/` | `parts_tht.py` | `build_board_tht.py` |
+| Variant | Outputs | Scripts |
+|---|---|---|
+| `smd` | `smd/kicad/`, `smd/fab/`, `smd/easyeda/`, `smd/docs/` | `scripts/smd/` |
+| `tht` | `tht/kicad/`, `tht/fab/`, `tht/easyeda/`, `tht/docs/` | `scripts/tht/` |
 
-Shared code (outline, artwork, stackup, footprint loading, the `Board` helper) lives in
-`build_board.py` and `build_schematic.py`. A change to shared code must leave **both** variants clean.
-A change to one variant must not alter the other's outputs.
+Each variant's scripts are `parts.py` (the single source of truth for its parts, nets and BOM data),
+`layout.py` (placement and routing) and `schematic.py` (the sheet). Everything else is shared, in
+`scripts/common/`. A change to shared code must leave **both** variants clean. A change to one
+variant must not alter the other's outputs.
 
 ## Everything is generated
 
-`kicad/`, `fab/`, `easyeda/`, `docs/` and everything under `tht/` except `tht/README.md` are **build
-outputs**. Never hand-edit them: the next build overwrites the changes. Make changes in `scripts/`,
-then rebuild:
+`smd/` and `tht/` hold **build outputs**, except their `README.md` files. Never hand-edit them: the
+next build overwrites the changes. Make changes in `scripts/`, then rebuild:
 
 ```sh
 python scripts/build_all.py          # both variants
@@ -48,26 +48,29 @@ Commit the regenerated outputs together with the script change that produced the
 
 | File | Role |
 |---|---|
-| `scripts/parts.py` | SMD parts: footprints, pin→net maps, values, LCSC/MPN, datasheets. Also the `Part` type, `uid()` and `board_net()` |
-| `scripts/parts_tht.py` | Through-hole parts, same structure |
-| `scripts/variants.py` | Variant registry: project name, output folder, parts table, star size |
-| `scripts/config.py` | SMD star size and LED radii, design rules, logo size, KiCad install detection |
-| `scripts/geometry.py` | Star outline parsed from the SVG path (lines + cubic Béziers), no deps |
-| `scripts/logo.py` | Logo polygons from `reference/mwg-logo.svg` |
-| `scripts/build_schematic.py` | Writes `.kicad_sch` + project symbol library. Plain Python |
-| `scripts/build_board.py` | Writes `.kicad_pcb` + project footprint library; shared machinery and the SMD layout. **Must run under KiCad's bundled Python** (`<KiCad>/bin/python.exe`), because it imports `pcbnew` |
-| `scripts/build_board_tht.py` | Through-hole layout (radii, hops, placement), called by `build_board.py tht` |
-| `scripts/model_jst.py` | Generated VRML model for J1 (KiCad ships none) |
-| `scripts/build_all.py` | Orchestrates generate → check → export |
+| `scripts/build_all.py` | Entry point: generate → check → export, per variant |
+| `scripts/build_schematic.py` | Entry point: writes `.kicad_sch` + project symbol library. Plain Python |
+| `scripts/build_board.py` | Entry point: writes `.kicad_pcb` + project footprint library. **Must run under KiCad's bundled Python** (`<KiCad>/bin/python.exe`), because it imports `pcbnew` |
+| `scripts/common/variants.py` | Variant registry: project name, output folder, star size, pour clearance, front silkscreen policy |
+| `scripts/common/config.py` | Design rules, LED ring angles, sheet placement, repo root, KiCad install detection |
+| `scripts/common/parts.py` | The `Part` type, `uid()` and `board_net()` |
+| `scripts/common/board.py` | Board machinery: the `Board` helper, outline, project footprint library, artwork, stackup |
+| `scripts/common/schematic.py` | Schematic machinery: symbol extraction/correction, the `Sheet` writer |
+| `scripts/common/geometry.py` | Star outline parsed from the SVG path (lines + cubic Béziers), no deps |
+| `scripts/common/logo.py` | Logo polygons from `reference/mwg-logo.svg` |
+| `scripts/common/model_jst.py` | Generated VRML model for the SMD J1 (KiCad ships none) |
+| `scripts/<variant>/parts.py` | That variant's parts: footprints, pin→net maps, values, LCSC/MPN, datasheets |
+| `scripts/<variant>/layout.py` | That variant's LED radii, placement, routing and artwork positions |
+| `scripts/<variant>/schematic.py` | That variant's schematic sheet |
 
-Coordinates in `build_board.py` are mm relative to the star centre, y pointing down, angles
-counter-clockwise on screen from east. `local(x, y, rot, u, v)` maps footprint-local offsets
-(`+v` = clockwise side of an LED) to board coordinates.
+Coordinates in the layouts are mm relative to the star centre, y pointing down, angles
+counter-clockwise on screen from east. `common.board.local(x, y, rot, u, v)` maps footprint-local
+offsets (`+v` = clockwise side of an LED) to board coordinates.
 
 ## Constraints that aren't obvious (SMD)
 
 - **Size.** The layout (LED radii, via slots, hop waypoints, back-side placement) is tuned for
-  `STAR_WIDTH = 50`. The LEDs alone need ≥ 44.5 mm. After changing the size, expect to rework the
+  a 50 mm star (`star_width` in `variants.py`). The LEDs alone need ≥ 44.5 mm. After changing the size, expect to rework the
   placement.
 - **Pours.** The front is a solid +5V pour and the back a solid GND pour. Anything that splits a pour
   into islands shows up as unconnected pads in DRC. In particular:
@@ -88,7 +91,7 @@ counter-clockwise on screen from east. `local(x, y, rot, u, v)` maps footprint-l
 ## Constraints that aren't obvious (through-hole)
 
 - **LED symbol.** KiCad's `APA-106-F5` symbol is 1 DO, 2 GND, 3 VDD, 4 DI. The WS2812D-F5 is 1 DOUT,
-  **2 VDD, 3 GND**, 4 DIN (datasheet). `parts_tht.py` makes a corrected copy (`symbol_name`,
+  **2 VDD, 3 GND**, 4 DIN (datasheet). `scripts/tht/parts.py` makes a corrected copy (`symbol_name`,
   `pin_numbers`). Never use the stock symbol as-is for this part.
 - **Size 55 mm.** At 50 mm the staggered pads only fit with the LEDs pulled in so far that the top
   LED's leads land under J1's housing (the top LED must be ≥ 13.6 mm from the centre).
@@ -116,6 +119,6 @@ counter-clockwise on screen from east. `local(x, y, rot, u, v)` maps footprint-l
 ## Part numbers
 
 When changing a part, verify the LCSC number on lcsc.com. Numbers recalled from memory have been
-wrong before (a 2-pin JST number was nearly used for the 3-pin part). Change it in `parts.py`: the
-BOMs and schematic/footprint fields are derived from it. The parts table in the README is written by
-hand, so update it too.
+wrong before (a 2-pin JST number was nearly used for the 3-pin part). Change it in the variant's `parts.py`: the
+BOMs and schematic/footprint fields are derived from it. The parts table in that variant's README is
+written by hand, so update it too.

@@ -1,10 +1,10 @@
-"""Components of the through-hole variant. Same structure as parts.py.
+"""Through-hole variant components. Same structure as smd/parts.py.
 
 WS2812D-F5 LEDs accept 3.3 V data directly (VIH = 2.7 V at VDD = 5 V), and
 their datasheet calls for no per-LED capacitor, so the board is just the LEDs,
 a bulk capacitor, a series resistor and the connector.
 """
-from parts import Part
+from common.parts import Part
 
 
 def led_nets(i):
