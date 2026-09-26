@@ -11,3 +11,6 @@ fp-info-cache
 ~*.lck
 _autosave-*
 *.bak
+
+# Scratch build output (renders, DRC reports)
+build/
