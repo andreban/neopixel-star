@@ -17,6 +17,9 @@ yellow sparkle from the [Modern Web Guidance logo](reference/mwg-logo.svg), unif
 
 Schematic: [docs/schematic.pdf](docs/schematic.pdf)
 
+> **Status:** the design passes KiCad ERC and DRC, including a check that the board matches the schematic,
+> but it has not been manufactured or tested yet. Treat the first order as a prototype run.
+
 ## Wiring
 
 | J1 pin | Signal | Connect to |
@@ -27,6 +30,28 @@ Schematic: [docs/schematic.pdf](docs/schematic.pdf)
 
 Pins are labelled on the back, next to the connector. The data chain is: LED1 in the centre,
 then the top point, then clockwise (index 0 = centre, 1 = top, 2 = top-right, … 8 = top-left).
+
+Minimal Arduino sketch ([Adafruit NeoPixel](https://github.com/adafruit/Adafruit_NeoPixel)):
+
+```cpp
+#include <Adafruit_NeoPixel.h>
+
+Adafruit_NeoPixel star(9, /* DIN pin */ 6, NEO_GRB + NEO_KHZ800);
+
+void setup() {
+  star.begin();
+  star.setBrightness(80);  // keep USB-powered boards within budget, see below
+}
+
+void loop() {
+  for (int i = 0; i < 9; i++) {          // light each LED in turn, centre first
+    star.clear();
+    star.setPixelColor(i, star.Color(255, 180, 0));
+    star.show();
+    delay(200);
+  }
+}
+```
 
 **Power:** at full white the board draws about 540 mA, which is more than many USB ports and cables
 supply. When powering from the MCU's USB 5 V pin, cap the brightness in software:
@@ -82,11 +107,26 @@ same pinout works.
   own libraries (`neopixel-star.kicad_sym`, `neopixel-star.pretty`), so no global libraries are needed.
   KiCad ships no 3D model for the SMD JST connector. `neopixel-star.3dshapes/` has a simple generated
   one (housing, opening, leads, tabs), used for the renders.
-- **EasyEDA Pro:** *File → Import → KiCad*, then pick `easyeda/neopixel-star-kicad.zip`.
-  EasyEDA rebuilds copper pours on import, so check the two pours after importing.
-  The files are in KiCad 10 format. EasyEDA's docs only promise KiCad 5.x and later, and newer
-  versions aren't documented. If the import fails, open the project in KiCad and use
-  *File → Archive Project*, or fall back to `easyeda/outline.dxf` (exact board outline) plus the Gerbers.
+- **EasyEDA Pro:** *File → Import → KiCad*, then pick `easyeda/neopixel-star-kicad.zip`. After importing:
+  - EasyEDA's default via rule asks for a 0.5 mm hole. This board uses 0.3 mm vias, which both fabs
+    make at standard price. Set *Design → Design Rules → Via Size* to a minimum inner diameter of
+    0.3 mm and a minimum outer diameter of 0.6 mm.
+  - EasyEDA rebuilds the copper pours on import, so check the front 5 V and back GND pours.
+  - EasyEDA's DRC may also flag the gold artwork (copper deliberately connected to no net) and
+    LED9's unused DOUT pin. Both are expected.
+- **Anything else:** `easyeda/outline.dxf` is the exact board outline, and the Gerbers work with any viewer.
+
+## Repository layout
+
+| Path | Contents |
+|---|---|
+| `kicad/` | KiCad 10 project, schematic, board, project symbol/footprint/3D libraries |
+| `fab/` | Gerbers + drill (`neopixel-star-gerbers.zip`), `jlcpcb/` and `pcbway/` BOM and placement files |
+| `easyeda/` | Zipped KiCad project for EasyEDA Pro, outline DXF |
+| `docs/` | Renders and schematic PDF |
+| `scripts/` | Generators: everything above is built from these |
+| `reference/` | The source logo SVG |
+| `PLAN.md` | Design decisions and their reasoning |
 
 ## Rebuilding
 
@@ -104,3 +144,9 @@ JLCPCB/PCBWay BOM and placement files, the EasyEDA package and the renders in `d
 To change the size, edit `STAR_WIDTH` in `config.py`. Below about 44.5 mm the 5050 LEDs no longer
 fit in the points. The LED radii, routing waypoints and back-side layout are tuned for 50 mm, so
 check DRC after changing it.
+
+## Credits
+
+The board outline and back-side artwork use the Modern Web Guidance logo from
+[developer.chrome.com](https://developer.chrome.com/). Inspired by the
+[Adafruit NeoPixel Jewel](https://www.adafruit.com/product/2226).
