@@ -24,8 +24,10 @@ Schematic: [docs/schematic.pdf](docs/schematic.pdf)
 - **0603 passives** (1.6 × 0.8 mm), easier to place by hand than 0402.
 - **Level shifter kept:** these LEDs need 0.63 × VDD (3.15 V) on DIN, which 3.3 V logic only just
   meets. U1 makes it reliable.
+- **Artwork on the front:** "Modern Web Guidance" and the gold logo sit below the centre LED,
+  where the per-LED capacitors would otherwise go. The credit line and pin labels stay on the back.
 - **Front silkscreen:** LED outlines with a pin-1 mark, to place them by hand. The SMD board's front
-  is blank.
+  is blank apart from the parts.
 
 ## Parts
 

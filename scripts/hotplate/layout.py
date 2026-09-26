@@ -1,9 +1,10 @@
 """Hot-plate layout (50 mm star). Called by scripts/build_board.py.
 
   front  9 x WS2812B-Mini (3535), R1, R2, C1, C2, solid +5V pour: everything
-         that needs paste, so it all reflows in one pass on a hot plate.
-  back   J1 and U1 only (soldered with an iron afterwards), artwork, the
-         LED-to-LED data hops, solid GND pour.
+         that needs paste, so it all reflows in one pass on a hot plate. Also
+         "Modern Web Guidance" and the gold logo, below the centre LED.
+  back   J1 and U1 only (soldered with an iron afterwards), the credit line,
+         J1 pin labels, the LED-to-LED data hops, solid GND pour.
 
 Each outer LED has three vias beside its body: DIN on its counter-clockwise
 side (outer end), DOUT and GND on its clockwise side (inner and outer end).
@@ -15,7 +16,7 @@ import math
 import pcbnew
 
 from common import config as C
-from common.board import artwork, local
+from common.board import credit, local, logo, pin_labels, title
 from common.geometry import polar
 
 R_AXIS, R_DIAG = 17.0, 13.0       # max that keeps pads and side vias 0.4 mm from the edge: 17.45 / 13.4
@@ -38,8 +39,9 @@ def layout(bd):
         bd.footprint(f"LED{i + 1}", x, y, rot)
     L = lambda i, uv: local(*leds[i], *uv)
 
-    # LED GND pads -> vias. Centre: below it, clear of J1's pads on the back.
-    gv = (-1.9, 3.1)
+    # LED GND pads -> vias. Centre: bottom left of it, above the front title
+    # and clear of J1's pads on the back.
+    gv = (-3.0, 2.9)
     bd.via("GND", *gv)
     bd.track("GND", F, [p("LED1", "3"), gv])
     for i in range(1, 9):
@@ -117,5 +119,9 @@ def layout(bd):
         bd.via("GND", *gv)
         bd.track("GND", F, [g, gv])
 
-    artwork(bd, text_y=2.95, logo_top=6.35, logo_width=4.2, label_y=-8.3,
-            labels=((-2.0, "5V"), (0.0, "DIN"), (2.0, "GND")))
+    # Artwork: title and gold logo on the front (the front has room now that
+    # there are no per-LED caps); credit and pin labels on the back.
+    title(bd, 3.9, front=True)
+    logo(bd, top=5.2, width=6.0, front=True)
+    credit(bd, 3.3)
+    pin_labels(bd, -8.3, ((-2.0, "5V"), (0.0, "DIN"), (2.0, "GND")))

@@ -217,14 +217,15 @@ def setup(bd):
 
 
 # --------------------------------------------------------------------------- artwork
-def add_text(bd, text, x, y, h, thick=0.15, angle=0):
+def add_text(bd, text, x, y, h, thick=0.15, angle=0, front=False):
+    """Silkscreen text; back-side text is mirrored so it reads from the back."""
     t = pcbnew.PCB_TEXT(bd.b)
     t.SetText(text)
-    t.SetLayer(pcbnew.B_SilkS)
+    t.SetLayer(pcbnew.F_SilkS if front else pcbnew.B_SilkS)
     t.SetTextSize(pcbnew.VECTOR2I(mm(h), mm(h)))
     t.SetTextThickness(mm(thick))
     t.SetPosition(pt(x, y))
-    t.SetMirrored(True)
+    t.SetMirrored(not front)
     t.SetTextAngleDegrees(angle)
     bd.b.Add(t)
     return t
@@ -248,35 +249,52 @@ def add_poly(bd, layer, outline, holes=()):
     bd.b.Add(sh)
 
 
-def add_gold(bd, outline, holes=()):
-    """Exposed gold: copper on B.Cu (no net) plus a matching B.Mask opening."""
-    for layer in (pcbnew.B_Cu, pcbnew.B_Mask):
+def add_gold(bd, outline, holes=(), front=False):
+    """Exposed gold: copper (no net) plus a matching solder mask opening."""
+    layers = (pcbnew.F_Cu, pcbnew.F_Mask) if front else (pcbnew.B_Cu, pcbnew.B_Mask)
+    for layer in layers:
         add_poly(bd, layer, outline, holes)
 
 
-def artwork(bd, text_y, logo_top, logo_width, label_y, labels):
-    """Back artwork: text block at text_y, gold logo from logo_top down, and
-    J1 pin labels [(x, text)] (vertical, one per 2 mm pitch pin) centred on label_y."""
-    # Viewed from the back the board is mirrored left-right, so artwork is
-    # mirrored in x to read correctly.
+def logo(bd, top, width, front=False):
+    """Gold MWG logo, centred on x = 0, from y = top down. Back-side artwork is
+    mirrored in x so it reads correctly when the board is viewed from the back."""
     shapes = logo_shapes()
     x0, y0, x1, y1 = logo_bounds(shapes)
-    k = logo_width / (x1 - x0)
-    tf = lambda pts: [(-(px - (x0 + x1) / 2) * k, logo_top + (py - y0) * k) for px, py in pts]
+    k = width / (x1 - x0)
+    m = 1 if front else -1
+    tf = lambda pts: [(m * (px - (x0 + x1) / 2) * k, top + (py - y0) * k) for px, py in pts]
     for outline, holes in shapes:
-        add_gold(bd, tf(outline), [tf(h) for h in holes])
+        add_gold(bd, tf(outline), [tf(h) for h in holes], front)
 
-    add_text(bd, "Modern Web Guidance", 0.0, text_y, 1.0)
-    # "Created with \u2728" / "by @andreban". The \u2728 is a tiny gold copy of the
-    # board outline, placed after "with" (at -x, since the text is mirrored).
-    t = add_text(bd, "Created with", 0.7, text_y + 1.35, 0.85, thick=0.14)
+
+def title(bd, y, front=False):
+    add_text(bd, "Modern Web Guidance", 0.0, y, 1.0, front=front)
+
+
+def credit(bd, y):
+    """"Created with ✨" / "by @andreban" on the back. The ✨ is a tiny gold copy
+    of the board outline, placed after "with" (at -x, since the text is mirrored)."""
+    t = add_text(bd, "Created with", 0.7, y, 0.85, thick=0.14)
     w = pcbnew.ToMM(t.GetBoundingBox().GetWidth())
-    sx, sy, ss = 0.7 - w / 2 - 0.85, text_y + 1.35, 1.15
-    add_gold(bd, [(sx + px, sy + py) for px, py in polyline(star_segments(ss), 8)])
-    add_text(bd, "by @andreban", 0.0, text_y + 2.5, 0.85, thick=0.14)
+    sx, ss = 0.7 - w / 2 - 0.85, 1.15
+    add_gold(bd, [(sx + px, y + py) for px, py in polyline(star_segments(ss), 8)])
+    add_text(bd, "by @andreban", 0.0, y + 1.15, 0.85, thick=0.14)
 
+
+def pin_labels(bd, y, labels):
+    """J1 pin labels [(x, text)] on the back, vertical (one per 2 mm pitch pin), centred on y."""
     for x, label in labels:
-        add_text(bd, label, x, label_y, 0.8, thick=0.13, angle=90)
+        add_text(bd, label, x, y, 0.8, thick=0.13, angle=90)
+
+
+def artwork(bd, text_y, logo_top, logo_width, label_y, labels):
+    """The standard back: title at text_y, credit below it, gold logo from
+    logo_top down, and J1 pin labels."""
+    logo(bd, logo_top, logo_width)
+    title(bd, text_y)
+    credit(bd, text_y + 1.35)
+    pin_labels(bd, label_y, labels)
 
 
 # --------------------------------------------------------------------------- stackup

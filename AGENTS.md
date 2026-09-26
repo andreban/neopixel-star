@@ -99,6 +99,9 @@ offsets (`+v` = clockwise side of an LED) to board coordinates.
 - **Hops run inward along the LED's side** before crossing to the notch. Cutting straight from a
   long-point LED toward the notch passes too close to the edge.
 - **No per-LED capacitors** (WS2812B-MINI-V3 datasheet). U1 stays: DIN needs 0.63 × VDD.
+- **Title and gold logo on the front**, below the centre LED; credit and pin labels on the back.
+  The artwork helpers in `common/board.py` (`title`, `logo`, `credit`, `pin_labels`) take a side;
+  `artwork()` is the standard all-on-the-back arrangement used by the other variants.
 
 ## Constraints that aren't obvious (through-hole)
 
