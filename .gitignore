@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# KiCad backups / caches / local state
+*-backups/
+*.kicad_prl
+fp-info-cache
+~*.lck
+_autosave-*
+*.bak
