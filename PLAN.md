@@ -40,7 +40,7 @@ will stay dark.
 - 2-layer, 1.6 mm FR-4 (or 1.0/1.2 mm), yellow mask, white silkscreen.
 
 ## Deliverables
-1. `neopixel-star.kicad_pro/.kicad_sch/.kicad_pcb` (KiCad 8/9 format). The board outline goes on
+1. `neopixel-star.kicad_pro/.kicad_sch/.kicad_pcb` (KiCad 10 format). The board outline goes on
    Edge.Cuts, generated from the SVG path by a script so it matches exactly.
 2. The generator script (Python) that builds the outline and LED placement. This makes size changes cheap.
 3. Fab outputs: shared Gerbers + drill files, plus JLCPCB and PCBWay assembly files (see Decisions).
@@ -55,8 +55,10 @@ will stay dark.
 - KiCad is not installed on this machine. Running DRC and exporting Gerbers needs KiCad 9 (`kicad-cli`).
 
 ## Decisions
-- LEDs: 5050 (WS2812B or SK6812, whichever is stocked at both fabs), star ~45 mm tip to tip.
-- Assembly: fab-assembled (PCBA), double-sided: LEDs + 100 nF caps on the front; JST, level shifter,
+- LEDs: 5050 (WS2812B or SK6812, whichever is stocked at both fabs), star **50 mm** tip to tip (45 mm fits the LEDs alone,
+  with no room left for the caps and data routing between them).
+- Assembly: fab-assembled (PCBA), double-sided: LEDs + 100 nF caps + R1 (330 R) on the front (no room for R1
+  between J1 and U1 on the back); JST, level shifter,
   resistors and bulk cap on the back.
 - Fabs: support **both JLCPCB and PCBWay** from one design. Silkscreen color is an order option, not part
   of the files, so the Gerbers are shared. Separate assembly packages:
@@ -91,11 +93,9 @@ will stay dark.
   - Python scripts generate the project: the exact SVG outline, placement, footprints, artwork and routing.
   - `kicad-cli pcb drc` and `kicad-cli sch erc` must pass with zero errors.
   - `kicad-cli` exports the Gerbers, drill files, positions/BOM, and front/back renders for review.
-  - Target the **KiCad 8 file format** for the EasyEDA copy, because EasyEDA Pro's KiCad importer may lag
-    behind KiCad 10. If KiCad 10 upgrades a file on save, the EasyEDA copy is still generated in v8 format and
-    is checked by opening it in KiCad 10 (which reads older formats).
-  - `easyeda/neopixel-star-kicad.zip`: zipped project (sch + pcb + libs) for EasyEDA Pro's File → Import → KiCad.
-  - `easyeda/outline.dxf`: a board-outline fallback for any tool.
+  - EasyEDA copy is the KiCad 10 project zipped (EasyEDA's importer docs are dated; the import is untested).
+    Fallback: `easyeda/outline.dxf` + Gerbers.
 
-## Open questions
-None. Ready to build.
+## Status
+Built: `python scripts/build_all.py` regenerates everything. ERC, DRC and schematic parity are clean.
+Still to verify: the EasyEDA Pro import, and part rotations in the JLCPCB/PCBWay placement previews.
