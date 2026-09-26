@@ -99,3 +99,25 @@ will stay dark.
 ## Status
 Built: `python scripts/build_all.py` regenerates everything. ERC, DRC and schematic parity are clean.
 Still to verify: the EasyEDA Pro import, and part rotations in the JLCPCB/PCBWay placement previews.
+
+## Through-hole variant (planned, not built)
+
+A second variant built by the same scripts, with its own outputs (e.g. `kicad-tht/`, `fab/tht/`, `docs/tht/`).
+
+- **LEDs:** 5 mm 4-lead addressable LEDs (WS2812D-F5 / PL9823-F5 / APA106-F5), KiCad footprint
+  `LED_D5.0mm-4_RGB`. Round outlines fit the points at ≥ ~42 mm.
+- **Size:** 50 mm to match the SMD board. Fall back to 55 mm if the layout is too cramped
+  (measured free front area: ~480 mm² at 50 mm vs ~280 mm² of parts plus routing).
+- **Components on one side:** everything on the front and soldered from the back, except the connector.
+- **Connector:** JST S3B-PH-K (side entry) on the back, cable toward the top point. Its 3 pins are
+  soldered from the front.
+- **Copper:** 2 layers (a single layer would need jumpers and loses the power planes).
+- **3.3 V data (Option A):** one 1N4001 in series with the whole board's 5 V input. All LEDs run at
+  ~4.2–4.3 V, uniform brightness, within the WS2812 3.7–5.3 V range. The first LED's input threshold
+  drops to ~3.0 V, and each LED re-drives the data at ~4.3 V. The diode also gives reverse-polarity
+  protection. It dissipates ~0.5 W at full white.
+  - Rejected: diode on the first LED only (that LED runs dimmer); 74HCT125 DIP-14 (needs ~60 mm);
+    2-transistor shifter (timing risk at 800 kHz).
+- **Passives:** 100 nF ceramic (2.54 mm pitch) per LED, 10 µF radial electrolytic, 330 Ω axial
+  (standing) on DIN. No pull-down or level-shifter IC needed.
+- **Back:** carries all solder joints. Text and gold logo fit around the LED lead holes.
