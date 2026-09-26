@@ -16,7 +16,7 @@ from parts import PARTS, uid, ROOT_SHEET
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 OUT = os.path.join(ROOT, "kicad", C.PROJECT + ".kicad_sch")
-SYM_LIB = C.KICAD_10 + "/share/kicad/symbols"
+SYM_LIB = C.SYM_LIB
 FONT = "(effects (font (size 1.27 1.27)))"
 HIDDEN = "(effects (font (size 1.27 1.27)) (hide yes))"
 

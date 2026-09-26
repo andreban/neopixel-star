@@ -9,9 +9,10 @@ is and how to order it, and [PLAN.md](PLAN.md) for why it is designed this way.
   - `kicad-cli`, for ERC, DRC, zone filling, Gerber/drill/position exports and renders;
   - KiCad's bundled Python, which provides `pcbnew`;
   - the stock symbol, footprint and 3D-model libraries, copied into the project libraries.
-- **`KICAD_10` in `scripts/config.py`** must point at the KiCad 10 installation directory (the folder
-  containing `bin/` and `share/`). Set it for your machine before building. The build fails if it
-  is wrong.
+- **Finding KiCad.** `scripts/config.py` looks in KiCad 10's standard install locations for Windows,
+  macOS and Linux. If KiCad is installed elsewhere, set the `KICAD_DIR` environment variable to the
+  installation directory: the folder containing `bin/` and `share/` on Windows and Linux,
+  `KiCad.app/Contents` on macOS. Never hardcode a machine-specific path in the repo.
 - **Python 3** for `build_all.py` and `build_schematic.py`. No third-party packages are needed.
 
 ## Everything is generated
@@ -33,7 +34,7 @@ Commit the regenerated outputs together with the script change that produced the
 | File | Role |
 |---|---|
 | `scripts/parts.py` | Single source of truth: footprints, pin→net maps, values, LCSC/MPN, datasheets |
-| `scripts/config.py` | Star size, LED radii, design rules, logo size, **KiCad install path** |
+| `scripts/config.py` | Star size, LED radii, design rules, logo size, KiCad install detection |
 | `scripts/geometry.py` | Star outline parsed from the SVG path (lines + cubic Béziers), no deps |
 | `scripts/logo.py` | Logo polygons from `reference/mwg-logo.svg` |
 | `scripts/build_schematic.py` | Writes `.kicad_sch` + project symbol library. Plain Python |

@@ -27,8 +27,8 @@ FAB = os.path.join(ROOT, "fab")
 BUILD = os.path.join(ROOT, "build")
 SCH = os.path.join(KICAD, C.PROJECT + ".kicad_sch")
 PCB = os.path.join(KICAD, C.PROJECT + ".kicad_pcb")
-CLI = os.path.join(C.KICAD_10, "bin", "kicad-cli.exe")
-KPY = os.path.join(C.KICAD_10, "bin", "python.exe")
+CLI = C.KICAD_CLI
+KPY = C.KICAD_PYTHON
 
 
 def run(*args):
