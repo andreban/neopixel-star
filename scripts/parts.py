@@ -37,12 +37,11 @@ def led_nets(i):
 
 
 def board_net(net, ref, pad):
-    """PCB net name as KiCad derives it from the schematic: power nets are
-    global, labelled nets are sheet-local ("/D1"), no-connects get a name of
-    their own."""
+    """PCB net name as KiCad derives it from the schematic. Power symbols and
+    global labels give plain names; a no-connect pin gets a net of its own."""
     if net is None:
         return f"unconnected-({ref}-{'DOUT' if ref.startswith('LED') else pad}-Pad{pad})"
-    return net if net in ("+5V", "GND") else "/" + net
+    return net
 
 
 PARTS = {}

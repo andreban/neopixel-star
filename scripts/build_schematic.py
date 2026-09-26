@@ -117,9 +117,13 @@ class Sheet:
     def label(self, net, x, y, pin_angle):
         a = (pin_angle + 180) % 360
         just = "right" if a in (180, 270) else "left"
-        self.items.append(f'\t(label "{net}" (at {x:.2f} {y:.2f} {a}) (fields_autoplaced yes)'
-                          f' (effects (font (size 1.27 1.27)) (justify {just} bottom))'
-                          f' (uuid "{uid(f"label/{net}/{x}/{y}")}"))')
+        # Global labels: their nets carry no sheet prefix ("D1", not "/D1"),
+        # so the names match in KiCad and in importers such as EasyEDA.
+        self.items.append(f'\t(global_label "{net}" (shape passive) (at {x:.2f} {y:.2f} {a})'
+                          f' (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify {just}))'
+                          f' (uuid "{uid(f"label/{net}/{x}/{y}")}")'
+                          f' (property "Intersheetrefs" "${{INTERSHEET_REFS}}" (at {x:.2f} {y:.2f} 0)'
+                          f' (effects (font (size 1.27 1.27)) (hide yes))))')
 
     def no_connect(self, x, y):
         self.items.append(f'\t(no_connect (at {x:.2f} {y:.2f}) (uuid "{uid(f"nc/{x}/{y}")}"))')
