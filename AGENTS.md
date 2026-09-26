@@ -3,6 +3,17 @@
 Guidance for AI agents (and humans) changing this project. See [README.md](README.md) for what the board
 is and how to order it, and [PLAN.md](PLAN.md) for why it is designed this way.
 
+## Prerequisites
+
+- **KiCad 10.** The build uses these parts of the installation:
+  - `kicad-cli`, for ERC, DRC, zone filling, Gerber/drill/position exports and renders;
+  - KiCad's bundled Python, which provides `pcbnew`;
+  - the stock symbol, footprint and 3D-model libraries, copied into the project libraries.
+- **`KICAD_10` in `scripts/config.py`** must point at the KiCad 10 installation directory (the folder
+  containing `bin/` and `share/`). Set it for your machine before building. The build fails if it
+  is wrong.
+- **Python 3** for `build_all.py` and `build_schematic.py`. No third-party packages are needed.
+
 ## Everything is generated
 
 `kicad/`, `fab/`, `easyeda/` and `docs/` are **build outputs**. Never hand-edit them: the next build
