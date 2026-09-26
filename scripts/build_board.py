@@ -18,6 +18,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 import config as C
 from geometry import star_segments, polar, polyline
 from logo import logo_shapes, logo_bounds
+from parts import PARTS, uid, board_net
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 OUT = os.path.join(ROOT, "kicad", C.PROJECT + ".kicad_pcb")
@@ -36,36 +37,6 @@ def pt(x, y):
 _IO = pcbnew.PCB_IO_MGR.FindPlugin(pcbnew.PCB_IO_MGR.KICAD_SEXP)
 
 # --------------------------------------------------------------------------- parts
-LED_FP = ("LED_SMD", "LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm")
-C0402 = ("Capacitor_SMD", "C_0402_1005Metric")
-R0402 = ("Resistor_SMD", "R_0402_1005Metric")
-
-
-def led_nets(i):
-    """WS2812B pins: 1 VDD, 2 DOUT, 3 VSS, 4 DIN. LED(i+1) is chain position i."""
-    return {"1": "+5V", "2": f"D{i + 1}" if i < 8 else None, "3": "GND",
-            "4": "LED_DIN" if i == 0 else f"D{i}"}
-
-
-PARTS = {}
-for i in range(9):
-    PARTS[f"LED{i + 1}"] = (*LED_FP, "WS2812B", led_nets(i))
-    PARTS[f"C{i + 1}"] = (*C0402, "100n", {"1": "+5V", "2": "GND"})
-PARTS.update({
-    "C10": ("Capacitor_SMD", "C_0805_2012Metric", "10u", {"1": "+5V", "2": "GND"}),
-    "C11": (*C0402, "100n", {"1": "+5V", "2": "GND"}),
-    "R1": (*R0402, "330", {"1": "DIN_5V", "2": "LED_DIN"}),
-    "R2": (*R0402, "100k", {"1": "DIN", "2": "GND"}),
-    # SN74AHCT1G125DBV: 1 ~OE, 2 A, 3 GND, 4 Y, 5 VCC
-    "U1": ("Package_TO_SOT_SMD", "SOT-23-5", "74AHCT1G125",
-           {"1": "GND", "2": "DIN", "3": "GND", "4": "DIN_5V", "5": "+5V"}),
-    # Same order as WS2812 strip pigtails: 5V, DIN, GND (labelled on the back).
-    # Mounting tabs on GND for strength and a better ground.
-    "J1": ("Connector_JST", "JST_PH_S3B-PH-SM4-TB_1x03-1MP_P2.00mm_Horizontal", "JST-PH 3p",
-           {"1": "+5V", "2": "DIN", "3": "GND", "MP": "GND"}),
-})
-
-
 LOCAL_LIB = os.path.join(ROOT, "kicad", C.PROJECT + ".pretty")
 
 
@@ -73,7 +44,8 @@ def make_local_library():
     """Copy the stock footprints used into kicad/<project>.pretty and register
     it in the project's fp-lib-table."""
     os.makedirs(LOCAL_LIB, exist_ok=True)
-    for lib, name, *_ in PARTS.values():
+    for part in {p.footprint: p for p in PARTS.values()}.values():
+        lib, name = part.lib, part.footprint
         src = os.path.join(C.FP_LIB, lib + ".pretty", name + ".kicad_mod")
         with open(src, encoding="utf-8") as f:
             text = f.read()
@@ -97,7 +69,8 @@ class Board:
         self.fps = {}
 
     # ---- primitives
-    def net(self, name):
+    def net(self, name, ref=None, pad=None):
+        name = board_net(name, ref, pad)
         if name not in self.nets:
             n = pcbnew.NETINFO_ITEM(self.b, name)
             self.b.Add(n)
@@ -105,7 +78,8 @@ class Board:
         return self.nets[name]
 
     def footprint(self, ref, x, y, rot, back=False):
-        lib, name, value, pinmap = PARTS[ref]
+        part = PARTS[ref]
+        name, value, pinmap = part.footprint, part.value, part.pins
         # Footprints come from the project-local library (a copy of KiCad's
         # stock ones) so the project opens anywhere, including EasyEDA.
         fp = _IO.FootprintLoad(LOCAL_LIB, name)
@@ -114,15 +88,26 @@ class Board:
         fp.SetValue(value)
         fp.Reference().SetVisible(False)
         fp.Value().SetVisible(False)
+        for k, v in (("LCSC", part.lcsc), ("MPN", part.mpn), ("Manufacturer", part.manufacturer),
+                     ("Datasheet", part.datasheet), ("Description", part.description)):
+            fp.SetField(k, v)
+        for f in fp.GetFields():
+            if f.GetName() in ("LCSC", "MPN", "Manufacturer", "Datasheet", "Description"):
+                f.SetVisible(False)
+                f.SetLayer(pcbnew.F_Fab)
+        # Link to the schematic symbol (root sheet) for DRC schematic parity.
+        fp.SetPath(pcbnew.KIID_PATH("/" + uid(ref)))
+        fp.SetSheetname("Root")
+        fp.SetSheetfile(C.PROJECT + ".kicad_sch")
         self.b.Add(fp)
         fp.SetPosition(pt(x, y))
         if back:
             fp.Flip(fp.GetPosition(), pcbnew.FLIP_DIRECTION_LEFT_RIGHT)
         fp.SetOrientationDegrees(rot)
         for pad in fp.Pads():
-            net = pinmap.get(pad.GetNumber())
-            if net:
-                pad.SetNet(self.net(net))
+            num = pad.GetNumber()
+            if num in pinmap:
+                pad.SetNet(self.net(pinmap[num], ref, num))
         self.fps[ref] = fp
         return fp
 
