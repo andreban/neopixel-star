@@ -6,6 +6,7 @@ yellow sparkle from the [Modern Web Guidance logo](reference/mwg-logo.svg), unif
 | Front | Back |
 |---|---|
 | ![front](docs/front.png) | ![back](docs/back.png) |
+| ![front, angled](docs/angle-front.png) | ![back, angled](docs/angle-back.png) |
 
 - 9 × WS2812B (5050): one in the centre, one in each of the 8 points
 - 100 nF decoupling cap per LED, 10 µF bulk cap
@@ -79,6 +80,8 @@ same pinout works.
 
 - **KiCad 10:** open `kicad/neopixel-star.kicad_pro`. Symbols and footprints come from the project's
   own libraries (`neopixel-star.kicad_sym`, `neopixel-star.pretty`), so no global libraries are needed.
+  KiCad ships no 3D model for the SMD JST connector. `neopixel-star.3dshapes/` has a simple generated
+  one (housing, opening, leads, tabs), used for the renders.
 - **EasyEDA Pro:** *File → Import → KiCad*, then pick `easyeda/neopixel-star-kicad.zip`.
   EasyEDA rebuilds copper pours on import, so check the two pours after importing.
   The files are in KiCad 10 format. EasyEDA's docs only promise KiCad 5.x and later, and newer

@@ -142,8 +142,12 @@ def docs():
         run(CLI, "pcb", "render", "--side", side, "--use-board-stackup-colors", "--quality", "high",
             "--width", "1600", "--height", "1600", "--background", "transparent",
             "-o", os.path.join(out, f"{name}.png"), PCB)
+    for side, rot, name in (("top", "-50,0,20", "angle-front"), ("bottom", "-50,0,200", "angle-back")):
+        run(CLI, "pcb", "render", "--side", side, "--perspective", "--rotate", rot, "--zoom", "0.9",
+            "--use-board-stackup-colors", "--quality", "high", "--width", "1600", "--height", "1200",
+            "-o", os.path.join(out, f"{name}.png"), PCB)
     run(CLI, "sch", "export", "pdf", "-o", os.path.join(out, "schematic.pdf"), SCH)
-    print("  -> docs/front.png, docs/back.png, docs/schematic.pdf")
+    print("  -> docs/*.png, docs/schematic.pdf")
 
 
 def easyeda():

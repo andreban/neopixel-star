@@ -19,6 +19,7 @@ import config as C
 from geometry import star_segments, polar, polyline
 from logo import logo_shapes, logo_bounds
 from parts import PARTS, uid, board_net
+from model_jst import jst_ph_s3b_sm4_wrl
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 OUT = os.path.join(ROOT, "kicad", C.PROJECT + ".kicad_pcb")
@@ -54,6 +55,14 @@ def make_local_library():
             # the back is left for the artwork. Outlines and pin marks move to
             # the fab layer, where they still show in assembly drawings.
             text = text.replace('(layer "F.SilkS")', '(layer "F.Fab")')
+        if lib == "Connector_JST":
+            # KiCad has no 3D model for this SMD part; use our own.
+            shapes = os.path.join(ROOT, "kicad", C.PROJECT + ".3dshapes")
+            os.makedirs(shapes, exist_ok=True)
+            with open(os.path.join(shapes, name + ".wrl"), "w", encoding="utf-8") as g:
+                g.write(jst_ph_s3b_sm4_wrl())
+            text = text.replace(f"${{KICAD10_3DMODEL_DIR}}/Connector_JST.3dshapes/{name}.step",
+                                f"${{KIPRJMOD}}/{C.PROJECT}.3dshapes/{name}.wrl")
         with open(os.path.join(LOCAL_LIB, name + ".kicad_mod"), "w", encoding="utf-8") as g:
             g.write(text)
     with open(os.path.join(ROOT, "kicad", "fp-lib-table"), "w", encoding="utf-8") as f:
