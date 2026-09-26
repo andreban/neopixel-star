@@ -1,6 +1,6 @@
-"""Rebuild everything from scratch:
+"""Rebuild everything from scratch, for every variant (or the ones named):
 
-    python scripts/build_all.py
+    python scripts/build_all.py [smd] [tht]
 
 1. schematic + symbol library           (build_schematic.py)
 2. board + footprint library            (build_board.py, KiCad's Python)
@@ -19,16 +19,24 @@ from collections import defaultdict
 
 sys.path.insert(0, os.path.dirname(__file__))
 import config as C
-from parts import PARTS
+import variants
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-KICAD = os.path.join(ROOT, "kicad")
-FAB = os.path.join(ROOT, "fab")
-BUILD = os.path.join(ROOT, "build")
-SCH = os.path.join(KICAD, C.PROJECT + ".kicad_sch")
-PCB = os.path.join(KICAD, C.PROJECT + ".kicad_pcb")
 CLI = C.KICAD_CLI
 KPY = C.KICAD_PYTHON
+
+# Set per variant by use().
+V = KICAD = FAB = BUILD = SCH = PCB = None
+
+
+def use(key):
+    global V, KICAD, FAB, BUILD, SCH, PCB
+    V = variants.get(key)
+    KICAD = os.path.join(ROOT, V.path("kicad"))
+    FAB = os.path.join(ROOT, V.path("fab"))
+    BUILD = os.path.join(ROOT, "build", V.key)
+    SCH = os.path.join(KICAD, V.project + ".kicad_sch")
+    PCB = os.path.join(KICAD, V.project + ".kicad_pcb")
 
 
 def run(*args):
@@ -47,8 +55,8 @@ def fresh(path):
 
 # --------------------------------------------------------------------------- generate + check
 def generate():
-    run(sys.executable, os.path.join(ROOT, "scripts", "build_schematic.py"))
-    run(KPY, os.path.join(ROOT, "scripts", "build_board.py"))
+    run(sys.executable, os.path.join(ROOT, "scripts", "build_schematic.py"), V.key)
+    run(KPY, os.path.join(ROOT, "scripts", "build_board.py"), V.key)
 
 
 def check():
@@ -62,7 +70,7 @@ def check():
     text = open(erc, encoding="utf-8").read() + open(drc, encoding="utf-8").read()
     counts = [int(n) for n in re.findall(r"Found (\d+)", text)]
     if any(counts):
-        sys.exit("ERC/DRC not clean, see build/erc.rpt and build/drc.rpt")
+        sys.exit(f"ERC/DRC not clean, see build/{V.key}/erc.rpt and build/{V.key}/drc.rpt")
     print("  ERC, DRC, schematic parity: clean")
 
 
@@ -74,7 +82,7 @@ def gerbers():
         "-o", out + os.sep, PCB)
     run(CLI, "pcb", "export", "drill", "--format", "excellon", "--excellon-separate-th",
         "--generate-map", "--map-format", "gerberx2", "-o", out + os.sep, PCB)
-    zpath = os.path.join(FAB, f"{C.PROJECT}-gerbers.zip")
+    zpath = os.path.join(FAB, f"{V.project}-gerbers.zip")
     with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED) as z:
         for f in sorted(os.listdir(out)):
             z.write(os.path.join(out, f), f)
@@ -97,9 +105,9 @@ def natural(ref):
 
 def bom_groups():
     groups = defaultdict(list)
-    for ref, p in PARTS.items():
+    for ref, p in V.parts.items():
         groups[(p.lcsc, p.value, p.footprint)].append(ref)
-    return sorted(((sorted(refs, key=natural), PARTS[refs[0]]) for refs in groups.values()),
+    return sorted(((sorted(refs, key=natural), V.parts[refs[0]]) for refs in groups.values()),
                   key=lambda g: natural(g[0][0]))
 
 
@@ -127,7 +135,8 @@ def pcbway(pos):
               ["Item #", "Designator", "Qty", "Manufacturer", "Mfg Part #", "Description / Value",
                "Package/Footprint", "Type", "LCSC Part #"],
               [[n, ",".join(refs), len(refs), p.manufacturer, p.mpn, f"{p.value} - {p.description}",
-                p.footprint, "SMD", p.lcsc] for n, (refs, p) in enumerate(bom_groups(), 1)])
+                p.footprint, "SMD" if V.key == "smd" else "THT", p.lcsc]
+               for n, (refs, p) in enumerate(bom_groups(), 1)])
     write_csv(os.path.join(out, "centroid.csv"),
               ["Designator", "Footprint", "Mid X(mm)", "Mid Y(mm)", "Layer", "Rotation", "Comment"],
               [[r["Ref"], r["Package"], r["PosX"], r["PosY"],
@@ -136,7 +145,7 @@ def pcbway(pos):
 
 
 def docs():
-    out = os.path.join(ROOT, "docs")
+    out = os.path.join(ROOT, V.path("docs"))
     os.makedirs(out, exist_ok=True)
     for side, name in (("top", "front"), ("bottom", "back")):
         run(CLI, "pcb", "render", "--side", side, "--use-board-stackup-colors", "--quality", "high",
@@ -147,30 +156,31 @@ def docs():
             "--use-board-stackup-colors", "--quality", "high", "--width", "1600", "--height", "1200",
             "-o", os.path.join(out, f"{name}.png"), PCB)
     run(CLI, "sch", "export", "pdf", "-o", os.path.join(out, "schematic.pdf"), SCH)
-    print("  -> docs/*.png, docs/schematic.pdf")
+    print(f"  -> {V.path('docs')}/*.png, schematic.pdf")
 
 
 def easyeda():
     """KiCad project zipped the way KiCad's own "Archive Project" does, for
     EasyEDA Pro's File > Import > KiCad, plus a bare outline DXF."""
-    out = fresh(os.path.join(ROOT, "easyeda"))
-    zpath = os.path.join(out, f"{C.PROJECT}-kicad.zip")
+    out = fresh(os.path.join(ROOT, V.path("easyeda")))
+    zpath = os.path.join(out, f"{V.project}-kicad.zip")
     files = [os.path.join(KICAD, f) for f in
-             (f"{C.PROJECT}.kicad_pro", f"{C.PROJECT}.kicad_sch", f"{C.PROJECT}.kicad_pcb",
-              f"{C.PROJECT}.kicad_sym", "fp-lib-table", "sym-lib-table")]
-    files += glob.glob(os.path.join(KICAD, f"{C.PROJECT}.pretty", "*.kicad_mod"))
+             (f"{V.project}.kicad_pro", f"{V.project}.kicad_sch", f"{V.project}.kicad_pcb",
+              f"{V.project}.kicad_sym", "fp-lib-table", "sym-lib-table")]
+    files += glob.glob(os.path.join(KICAD, f"{V.project}.pretty", "*.kicad_mod"))
     with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED) as z:
         for f in files:
             z.write(f, os.path.relpath(f, KICAD))
     run(CLI, "pcb", "export", "dxf", "--layers", "Edge.Cuts", "--output-units", "mm",
         "--mode-single", "-o", os.path.join(out, "outline.dxf"), PCB)
-    print("  ->", os.path.relpath(zpath, ROOT), "and easyeda/outline.dxf")
+    print("  ->", os.path.relpath(zpath, ROOT), "and outline.dxf")
 
 
-def main():
-    print("generate"); generate()
-    print("check"); check()
-    print("export")
+def build(key):
+    use(key)
+    print(f"[{V.key}] generate"); generate()
+    print(f"[{V.key}] check"); check()
+    print(f"[{V.key}] export")
     os.makedirs(FAB, exist_ok=True)
     gerbers()
     pos = placements()
@@ -178,6 +188,11 @@ def main():
     pcbway(pos)
     easyeda()
     docs()
+
+
+def main():
+    for key in sys.argv[1:] or variants.ALL:
+        build(key)
 
 
 if __name__ == "__main__":

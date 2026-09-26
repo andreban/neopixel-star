@@ -1,0 +1,5 @@
+Item #,Designator,Qty,Manufacturer,Mfg Part #,Description / Value,Package/Footprint,Type,LCSC Part #
+1,C1,1,Chengx,KM106M025D11RR0VH2FP0,"10u - 10 uF 25 V electrolytic, 5 x 11 mm, bulk",CP_Radial_D5.0mm_P2.00mm,THT,C43347
+2,J1,1,JST,S3B-PH-K-S(LF)(SN),"JST-PH 3p - JST PH 2.0 mm 3-pin, through-hole side entry",JST_PH_S3B-PH-K_1x03_P2.00mm_Horizontal,THT,C157929
+3,"LED1,LED2,LED3,LED4,LED5,LED6,LED7,LED8,LED9",9,Worldsemi,WS2812D-F5,"WS2812D-F5 - Addressable RGB LED, 5 mm through-hole",LED_D5.0mm-4_RGB_Staggered_Pins,THT,C190565
+4,R1,1,CCO,MF1/4W-330R 1%,"330 - 330 R 1/4 W metal film, data series resistor",R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical,THT,C119313

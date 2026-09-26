@@ -17,6 +17,11 @@ class Part:
     manufacturer: str
     description: str = ""
     datasheet: str = ""
+    # When the stock symbol's pin numbering doesn't match the part: the name
+    # of the corrected copy in the project library, and stock -> real pin number.
+    symbol_name: str = ""
+    pin_numbers: dict = field(default_factory=dict)
+    nc_pin_name: str = "DOUT"   # symbol pin name of the unconnected pin (LED9's data out)
 
 
 LED = dict(lib="LED_SMD", footprint="LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm", value="WS2812B",
@@ -36,11 +41,11 @@ def led_nets(i):
             "4": "LED_DIN" if i == 0 else f"D{i}"}
 
 
-def board_net(net, ref, pad):
+def board_net(net, ref=None, pad=None, pin_name=None):
     """PCB net name as KiCad derives it from the schematic. Power symbols and
     global labels give plain names; a no-connect pin gets a net of its own."""
     if net is None:
-        return f"unconnected-({ref}-{'DOUT' if ref.startswith('LED') else pad}-Pad{pad})"
+        return f"unconnected-({ref}-{pin_name or pad}-Pad{pad})"
     return net
 
 
@@ -71,11 +76,11 @@ PARTS.update({
 })
 
 
-def uid(name):
+def uid(name, ns=""):
     """Stable UUID so schematic symbols and PCB footprints link up (and the
-    generated files don't churn between runs)."""
+    generated files don't churn between runs). `ns` separates variants."""
     import uuid
-    return str(uuid.uuid5(uuid.NAMESPACE_URL, "neopixel-star/" + name))
+    return str(uuid.uuid5(uuid.NAMESPACE_URL, "neopixel-star/" + ns + name))
 
 
 ROOT_SHEET = uid("root-sheet")

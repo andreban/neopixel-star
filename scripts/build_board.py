@@ -1,7 +1,11 @@
-"""Generate kicad/neopixel-star.kicad_pcb. Run with KiCad's bundled Python:
+"""Generate the board of a variant. Run with KiCad's bundled Python:
 
-    "<KiCad>/bin/python.exe" scripts/build_board.py
+    "<KiCad>/bin/python.exe" scripts/build_board.py [smd|tht]
 
+This file holds the shared machinery and the SMD layout; the through-hole
+layout is in build_board_tht.py.
+
+SMD layout:
 Layout:
   front  9 LEDs + their 100 nF caps, solid +5V pour
   back   JST connector, level shifter, artwork, solid GND pour
@@ -18,11 +22,16 @@ sys.path.insert(0, os.path.dirname(__file__))
 import config as C
 from geometry import star_segments, polar, polyline
 from logo import logo_shapes, logo_bounds
-from parts import PARTS, uid, board_net
+from parts import uid, board_net
 from model_jst import jst_ph_s3b_sm4_wrl
+import variants
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-OUT = os.path.join(ROOT, "kicad", C.PROJECT + ".kicad_pcb")
+V = variants.get("smd")      # current variant, set by main()
+
+
+def kicad_dir():
+    return os.path.join(ROOT, V.path("kicad"))
 
 mm = pcbnew.FromMM
 CX, CY = C.CENTER
@@ -38,37 +47,51 @@ def pt(x, y):
 _IO = pcbnew.PCB_IO_MGR.FindPlugin(pcbnew.PCB_IO_MGR.KICAD_SEXP)
 
 # --------------------------------------------------------------------------- parts
-LOCAL_LIB = os.path.join(ROOT, "kicad", C.PROJECT + ".pretty")
+def local_lib():
+    return os.path.join(kicad_dir(), V.project + ".pretty")
 
 
 def make_local_library():
-    """Copy the stock footprints used into kicad/<project>.pretty and register
-    it in the project's fp-lib-table."""
-    os.makedirs(LOCAL_LIB, exist_ok=True)
-    for part in {p.footprint: p for p in PARTS.values()}.values():
+    """Copy the stock footprints used into <kicad>/<project>.pretty and
+    register it in the project's fp-lib-table."""
+    os.makedirs(local_lib(), exist_ok=True)
+    for part in {p.footprint: p for p in V.parts.values()}.values():
         lib, name = part.lib, part.footprint
         src = os.path.join(C.FP_LIB, lib + ".pretty", name + ".kicad_mod")
         with open(src, encoding="utf-8") as f:
             text = f.read()
-        if lib not in ("Connector_JST", "Package_TO_SOT_SMD"):
+        if V.key == "smd" and lib not in ("Connector_JST", "Package_TO_SOT_SMD"):
             # LEDs and passives carry no silkscreen: the front stays clean and
             # the back is left for the artwork. Outlines and pin marks move to
             # the fab layer, where they still show in assembly drawings.
+            # (The hand-soldered THT variant keeps them: they show which way
+            # the LEDs and the electrolytic go in.)
             text = text.replace('(layer "F.SilkS")', '(layer "F.Fab")')
-        if lib == "Connector_JST":
+        if name.startswith("LED_D5.0mm"):
+            # The outline arcs run over the staggered pads. Keep the outline
+            # on the fab layer and mark only the LED's flat side (pin 1) in
+            # silkscreen, clear of the pads.
+            text = text.replace('(layer "F.SilkS")', '(layer "F.Fab")')
+            # 1.5 mm pads (0.3 mm annular ring) instead of 1.8 mm, so the
+            # pours can flow between the staggered pads to each point's tip.
+            text = text.replace("(size 1.8 1.8)", "(size 1.5 1.5)")
+            text = text.rstrip()[:-1] + (
+                '\t(fp_line (start -0.087 1.05) (end -0.087 2.35)'
+                ' (stroke (width 0.15) (type solid)) (layer "F.SilkS"))\n)\n')
+        if "SM4" in name:
             # KiCad has no 3D model for this SMD part; use our own.
-            shapes = os.path.join(ROOT, "kicad", C.PROJECT + ".3dshapes")
+            shapes = os.path.join(kicad_dir(), V.project + ".3dshapes")
             os.makedirs(shapes, exist_ok=True)
             with open(os.path.join(shapes, name + ".wrl"), "w", encoding="utf-8") as g:
                 g.write(jst_ph_s3b_sm4_wrl())
             text = text.replace(f"${{KICAD10_3DMODEL_DIR}}/Connector_JST.3dshapes/{name}.step",
-                                f"${{KIPRJMOD}}/{C.PROJECT}.3dshapes/{name}.wrl")
-        with open(os.path.join(LOCAL_LIB, name + ".kicad_mod"), "w", encoding="utf-8") as g:
+                                f"${{KIPRJMOD}}/{V.project}.3dshapes/{name}.wrl")
+        with open(os.path.join(local_lib(), name + ".kicad_mod"), "w", encoding="utf-8") as g:
             g.write(text)
-    with open(os.path.join(ROOT, "kicad", "fp-lib-table"), "w", encoding="utf-8") as f:
+    with open(os.path.join(kicad_dir(), "fp-lib-table"), "w", encoding="utf-8") as f:
         f.write('(fp_lib_table\n\t(version 7)\n'
-                f'\t(lib (name "{C.PROJECT}") (type "KiCad") '
-                f'(uri "${{KIPRJMOD}}/{C.PROJECT}.pretty") (options "") (descr "Project footprints"))\n)\n')
+                f'\t(lib (name "{V.project}") (type "KiCad") '
+                f'(uri "${{KIPRJMOD}}/{V.project}.pretty") (options "") (descr "Project footprints"))\n)\n')
 
 
 class Board:
@@ -79,7 +102,7 @@ class Board:
 
     # ---- primitives
     def net(self, name, ref=None, pad=None):
-        name = board_net(name, ref, pad)
+        name = board_net(name, ref, pad, V.parts[ref].nc_pin_name if ref else None)
         if name not in self.nets:
             n = pcbnew.NETINFO_ITEM(self.b, name)
             self.b.Add(n)
@@ -87,12 +110,12 @@ class Board:
         return self.nets[name]
 
     def footprint(self, ref, x, y, rot, back=False):
-        part = PARTS[ref]
+        part = V.parts[ref]
         name, value, pinmap = part.footprint, part.value, part.pins
         # Footprints come from the project-local library (a copy of KiCad's
         # stock ones) so the project opens anywhere, including EasyEDA.
-        fp = _IO.FootprintLoad(LOCAL_LIB, name)
-        fp.SetFPIDAsString(f"{C.PROJECT}:{name}")
+        fp = _IO.FootprintLoad(local_lib(), name)
+        fp.SetFPIDAsString(f"{V.project}:{name}")
         fp.SetReference(ref)
         fp.SetValue(value)
         fp.Reference().SetVisible(False)
@@ -105,9 +128,9 @@ class Board:
                 f.SetVisible(False)
                 f.SetLayer(pcbnew.F_Fab)
         # Link to the schematic symbol (root sheet) for DRC schematic parity.
-        fp.SetPath(pcbnew.KIID_PATH("/" + uid(ref)))
+        fp.SetPath(pcbnew.KIID_PATH("/" + uid(ref, V.ns)))
         fp.SetSheetname("Root")
-        fp.SetSheetfile(C.PROJECT + ".kicad_sch")
+        fp.SetSheetfile(V.project + ".kicad_sch")
         self.b.Add(fp)
         fp.SetPosition(pt(x, y))
         if back:
@@ -145,8 +168,8 @@ class Board:
         v.SetNet(self.net(net))
         self.b.Add(v)
 
-    def zone(self, net, layer):
-        outline = [pt(*p) for p in polyline(star_segments(C.STAR_WIDTH), 16)]
+    def zone(self, net, layer, clearance=0.3):
+        outline = [pt(*p) for p in polyline(star_segments(V.star_width), 16)]
         z = pcbnew.ZONE(self.b)
         z.SetLayer(layer)
         z.SetNet(self.net(net))
@@ -154,7 +177,7 @@ class Board:
         for p in outline:
             ch.append(p)
         z.AddPolygon(ch)
-        z.SetLocalClearance(mm(0.3))
+        z.SetLocalClearance(mm(clearance))
         z.SetMinThickness(mm(0.25))
         z.SetThermalReliefGap(mm(0.3))
         z.SetThermalReliefSpokeWidth(mm(0.4))
@@ -187,7 +210,7 @@ def setup(bd):
     nc.SetViaDrill(mm(C.VIA_DRILL))
 
     # Outline: the SVG's own lines and cubic Beziers, uniformly scaled.
-    for s in star_segments(C.STAR_WIDTH):
+    for s in star_segments(V.star_width):
         sh = pcbnew.PCB_SHAPE(bd.b)
         sh.SetLayer(pcbnew.Edge_Cuts)
         sh.SetWidth(mm(0.1))
@@ -396,30 +419,33 @@ def add_gold(bd, outline, holes=()):
         add_poly(bd, layer, outline, holes)
 
 
-def artwork(bd):
+SMD_LABELS = ((-2.0, "5V"), (0.0, "DIN"), (2.0, "GND"))
+
+
+def artwork(bd, text_y=2.95, logo_top=C.LOGO_TOP, logo_width=C.LOGO_WIDTH, label_y=-8.3,
+            labels=SMD_LABELS):
+    """Back artwork: text block at text_y, gold logo from logo_top down, and
+    J1 pin labels (vertical, one per 2 mm pitch pin) centred on label_y."""
     # Viewed from the back the board is mirrored left-right, so artwork is
     # mirrored in x to read correctly.
     shapes = logo_shapes()
     x0, y0, x1, y1 = logo_bounds(shapes)
-    k = C.LOGO_WIDTH / (x1 - x0)
-    top = C.LOGO_TOP
-    tf = lambda pts: [(-(px - (x0 + x1) / 2) * k, top + (py - y0) * k) for px, py in pts]
+    k = logo_width / (x1 - x0)
+    tf = lambda pts: [(-(px - (x0 + x1) / 2) * k, logo_top + (py - y0) * k) for px, py in pts]
     for outline, holes in shapes:
         add_gold(bd, tf(outline), [tf(h) for h in holes])
 
-    add_text(bd, "Modern Web Guidance", 0.0, 2.95, 1.0)
-    # "Created with ✨" / "by @andreban". The ✨ is a tiny gold copy of the
+    add_text(bd, "Modern Web Guidance", 0.0, text_y, 1.0)
+    # "Created with \u2728" / "by @andreban". The \u2728 is a tiny gold copy of the
     # board outline, placed after "with" (at -x, since the text is mirrored).
-    t = add_text(bd, "Created with", 0.7, 4.3, 0.85, thick=0.14)
+    t = add_text(bd, "Created with", 0.7, text_y + 1.35, 0.85, thick=0.14)
     w = pcbnew.ToMM(t.GetBoundingBox().GetWidth())
-    sx, sy, ss = 0.7 - w / 2 - 0.85, 4.3, 1.15
+    sx, sy, ss = 0.7 - w / 2 - 0.85, text_y + 1.35, 1.15
     add_gold(bd, [(sx + px, sy + py) for px, py in polyline(star_segments(ss), 8)])
-    add_text(bd, "by @andreban", 0.0, 5.45, 0.85, thick=0.14)
+    add_text(bd, "by @andreban", 0.0, text_y + 2.5, 0.85, thick=0.14)
 
-    # Connector pin labels just above J1, vertical to fit the 2 mm pitch
-    # (hidden under the plug when mated).
-    for x, label in ((-2.0, "5V"), (0.0, "DIN"), (2.0, "GND")):
-        add_text(bd, label, x, -8.3, 0.8, thick=0.13, angle=90)
+    for x, label in labels:
+        add_text(bd, label, x, label_y, 0.8, thick=0.13, angle=90)
 
 
 # --------------------------------------------------------------------------- stackup
@@ -449,21 +475,35 @@ def write_stackup(path):
         f.write(text)
 
 
-def main():
-    make_local_library()
-    bd = Board()
-    setup(bd)
+def layout_smd(bd):
     leds = front(bd)
     back(bd)
     data_chain(bd, leds)
     artwork(bd)
-    bd.zone("+5V", pcbnew.F_Cu)
-    bd.zone("GND", pcbnew.B_Cu)
-    pcbnew.ZONE_FILLER(bd.b).Fill(bd.b.Zones())
-    os.makedirs(os.path.dirname(OUT), exist_ok=True)
-    bd.b.Save(OUT)
-    write_stackup(OUT)
-    print("saved", OUT)
+
+
+def main():
+    global V
+    V = variants.get(sys.argv[1] if len(sys.argv) > 1 else "smd")
+    os.makedirs(kicad_dir(), exist_ok=True)
+    make_local_library()
+    bd = Board()
+    setup(bd)
+    if V.key == "tht":
+        import build_board_tht
+        build_board_tht.layout(bd)
+    else:
+        layout_smd(bd)
+    # THT: 0.25 mm lets the pours pass between the staggered LED pads.
+    zc = 0.25 if V.key == "tht" else 0.3
+    bd.zone("+5V", pcbnew.F_Cu, zc)
+    bd.zone("GND", pcbnew.B_Cu, zc)
+    # Zones are filled by kicad-cli in build_all.py (ZONE_FILLER from Python
+    # is unreliable).
+    out = os.path.join(kicad_dir(), V.project + ".kicad_pcb")
+    bd.b.Save(out)
+    write_stackup(out)
+    print("saved", out)
 
 
 if __name__ == "__main__":

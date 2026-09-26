@@ -100,24 +100,22 @@ will stay dark.
 Built: `python scripts/build_all.py` regenerates everything. ERC, DRC and schematic parity are clean.
 Still to verify: the EasyEDA Pro import, and part rotations in the JLCPCB/PCBWay placement previews.
 
-## Through-hole variant (planned, not built)
+## Through-hole variant (built)
 
-A second variant built by the same scripts, with its own outputs (e.g. `kicad-tht/`, `fab/tht/`, `docs/tht/`).
+Built by the same scripts into `tht/`; see `tht/README.md`. Final decisions, with what changed from
+the original plan:
 
-- **LEDs:** 5 mm 4-lead addressable LEDs (WS2812D-F5 / PL9823-F5 / APA106-F5), KiCad footprint
-  `LED_D5.0mm-4_RGB`. Round outlines fit the points at ≥ ~42 mm.
-- **Size:** 50 mm to match the SMD board. Fall back to 55 mm if the layout is too cramped
-  (measured free front area: ~480 mm² at 50 mm vs ~280 mm² of parts plus routing).
-- **Components on one side:** everything on the front and soldered from the back, except the connector.
-- **Connector:** JST S3B-PH-K (side entry) on the back, cable toward the top point. Its 3 pins are
-  soldered from the front.
-- **Copper:** 2 layers (a single layer would need jumpers and loses the power planes).
-- **3.3 V data (Option A):** one 1N4001 in series with the whole board's 5 V input. All LEDs run at
-  ~4.2–4.3 V, uniform brightness, within the WS2812 3.7–5.3 V range. The first LED's input threshold
-  drops to ~3.0 V, and each LED re-drives the data at ~4.3 V. The diode also gives reverse-polarity
-  protection. It dissipates ~0.5 W at full white.
-  - Rejected: diode on the first LED only (that LED runs dimmer); 74HCT125 DIP-14 (needs ~60 mm);
-    2-transistor shifter (timing risk at 800 kHz).
-- **Passives:** 100 nF ceramic (2.54 mm pitch) per LED, 10 µF radial electrolytic, 330 Ω axial
-  (standing) on DIN. No pull-down or level-shifter IC needed.
-- **Back:** carries all solder joints. Text and gold logo fit around the LED lead holes.
+- **LEDs:** Worldsemi WS2812D-F5 (LCSC C190565). Datasheet pinout: 1 DOUT, 2 VDD, 3 GND, 4 DIN.
+  KiCad's APA-106-F5 symbol swaps VDD/GND, so the project library has a corrected copy.
+- **No diode (changed from Option A).** The datasheet specifies VIH = 2.7 V at VDD = 5 V, so 3.3 V data
+  works directly with the LEDs at full 5 V. Dropped at the user's choice once this was found.
+- **No per-LED capacitors (changed).** The datasheet calls for none. One 10 µF electrolytic (C43347).
+- **R1** 330 Ω ¼ W upright (C119313). **J1** JST S3B-PH-K-S (C157929) on the back, cable toward the top.
+- **Size 55 mm (the planned fallback).** At 50 mm the LEDs only fit pulled in so far that the top
+  LED's leads end up under J1's housing.
+- **Footprint:** KiCad's staggered 5 mm RGB footprint with pads reduced to 1.5 mm. Inline pads at
+  1.27 mm pitch left a 0.085 mm annular ring; 1.8 mm staggered pads sealed the pours off from the tips.
+- **Layout:** LED leads run tangentially, DIN counter-clockwise and DOUT clockwise. The data hops are
+  on the back (VDD sits in each LED's outer pin row). Long-point LEDs at 14.0 mm, diagonals at 12.6 mm.
+- **Components on one side:** all on the front except J1. Two copper layers.
+- **Front silkscreen** is kept for hand assembly: an LED flat-side mark, and C1/R1 marks.

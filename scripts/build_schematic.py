@@ -1,4 +1,6 @@
-"""Generate kicad/neopixel-star.kicad_sch from scripts/parts.py.
+"""Generate the schematic of a variant:
+
+    python scripts/build_schematic.py [smd|tht]
 
 Every signal pin gets a net label and every supply pin a power symbol, so the
 schematic's connectivity is exactly the PCB's netlist. Symbols are copied from
@@ -12,11 +14,16 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 import config as C
-from parts import PARTS, uid, ROOT_SHEET
+import parts
+import variants
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-OUT = os.path.join(ROOT, "kicad", C.PROJECT + ".kicad_sch")
 SYM_LIB = C.SYM_LIB
+V = variants.get("smd")      # current variant, set by main()
+
+
+def uid(name):
+    return parts.uid(name, V.ns)
 FONT = "(effects (font (size 1.27 1.27)))"
 HIDDEN = "(effects (font (size 1.27 1.27)) (hide yes))"
 
@@ -40,8 +47,11 @@ def _prop(block, key):
     return m.group(1) if m else None
 
 
-def lib_symbol(lib_id):
-    """Stock symbol definition (by stock lib_id), with `extends` flattened."""
+def lib_symbol(lib_id, rename=None, pin_numbers=None):
+    """Stock symbol definition (by stock lib_id), with `extends` flattened.
+
+    `rename` and `pin_numbers` (stock -> real) make a corrected copy for parts
+    whose pinout differs from the stock symbol's."""
     lib, name = lib_id.split(":")
     with open(f"{SYM_LIB}/{lib}.kicad_sym", encoding="utf-8") as f:
         text = f.read()
@@ -55,6 +65,12 @@ def lib_symbol(lib_id):
                 base = re.sub(r'(\(property "%s" )"[^"]*"' % key, lambda m: f'{m.group(1)}"{v}"', base)
         blk = base.replace(f'(symbol "{parent.group(1)}_', f'(symbol "{name}_')
         blk = blk.replace(f'(symbol "{parent.group(1)}"', f'(symbol "{name}"', 1)
+    if pin_numbers:
+        blk = re.sub(r'\(number "([^"]+)"', lambda m: f'(number "{pin_numbers.get(m.group(1), m.group(1))}"', blk)
+    if rename:
+        blk = blk.replace(f'(symbol "{name}_', f'(symbol "{rename}_').replace(
+            f'(symbol "{name}"', f'(symbol "{rename}"', 1).replace(
+            f'(property "Value" "{name}"', f'(property "Value" "{rename}"', 1)
     return blk
 
 
@@ -73,15 +89,16 @@ class Sheet:
         self.lib = {}
         self.pwr = 0
 
-    def _lib(self, stock_id):
+    def _lib(self, stock_id, rename=None, pin_numbers=None):
         """Symbols are copied into the project library; returns the local lib_id."""
-        name = stock_id.split(":")[1]
+        name = rename or stock_id.split(":")[1]
         if name not in self.lib:
-            self.lib[name] = lib_symbol(stock_id)
-        return f"{C.PROJECT}:{name}", self.lib[name]
+            self.lib[name] = lib_symbol(stock_id, rename, pin_numbers)
+        return f"{V.project}:{name}", self.lib[name]
 
-    def symbol(self, stock_id, ref, value, x, y, fields=(), footprint="", angle=0, datasheet="~"):
-        lib_id, blk = self._lib(stock_id)
+    def symbol(self, stock_id, ref, value, x, y, fields=(), footprint="", angle=0, datasheet="~",
+               rename=None, pin_numbers=None):
+        lib_id, blk = self._lib(stock_id, rename, pin_numbers)
         # Reference/Value where the library symbol puts them (rotated with
         # power symbols); power symbols hide their #PWR reference.
         def spot(key):
@@ -102,10 +119,10 @@ class Sheet:
             f' (exclude_from_sim no) (in_bom {"no" if ref.startswith("#") else "yes"})'
             f' (on_board {"no" if ref.startswith("#") else "yes"}) (dnp no)'
             f' (uuid "{uid(ref)}"){body}{pin_uuids}'
-            f'\n\t\t(instances (project "{C.PROJECT}" (path "/{ROOT_SHEET}" (reference "{ref}") (unit 1))))\n\t)')
+            f'\n\t\t(instances (project "{V.project}" (path "/{uid("root-sheet")}" (reference "{ref}") (unit 1))))\n\t)')
 
-    def pin_at(self, stock_id, x, y, num):
-        px, py, a = pins(self._lib(stock_id)[1])[num]
+    def pin_at(self, stock_id, x, y, num, rename=None, pin_numbers=None):
+        px, py, a = pins(self._lib(stock_id, rename, pin_numbers)[1])[num]
         return x + px, y - py, a            # schematic y grows downward
 
     def power(self, net, x, y, angle=0):
@@ -135,13 +152,14 @@ class Sheet:
 
     def part(self, ref, x, y):
         """Place a part and hook every pin to its net."""
-        p = PARTS[ref]
+        p = V.parts[ref]
         fields = [("LCSC", p.lcsc), ("MPN", p.mpn), ("Manufacturer", p.manufacturer),
                   ("Description", p.description)]
-        self.symbol(p.symbol, ref, p.value, x, y, fields, f"{C.PROJECT}:{p.footprint}",
-                    datasheet=p.datasheet or "~")
+        fix = dict(rename=p.symbol_name or None, pin_numbers=p.pin_numbers or None)
+        self.symbol(p.symbol, ref, p.value, x, y, fields, f"{V.project}:{p.footprint}",
+                    datasheet=p.datasheet or "~", **fix)
         for num, net in p.pins.items():
-            px, py, a = self.pin_at(p.symbol, x, y, num)
+            px, py, a = self.pin_at(p.symbol, x, y, num, **fix)
             if net is None:
                 self.no_connect(px, py)
             elif net in ("+5V", "GND"):
@@ -154,48 +172,70 @@ class Sheet:
     def write(self, path):
         # Project symbol library + table, so the project needs no global libs.
         folder = os.path.dirname(path)
-        with open(os.path.join(folder, C.PROJECT + ".kicad_sym"), "w", encoding="utf-8") as f:
+        with open(os.path.join(folder, V.project + ".kicad_sym"), "w", encoding="utf-8") as f:
             f.write('(kicad_symbol_lib\n\t(version 20251024)\n\t(generator "neopixel-star")\n'
                     '\t(generator_version "10.0")\n\t' +
                     "\n\t".join(b.replace("\n", "\n\t") for b in self.lib.values()) + "\n)\n")
         with open(os.path.join(folder, "sym-lib-table"), "w", encoding="utf-8") as f:
             f.write('(sym_lib_table\n\t(version 7)\n'
-                    f'\t(lib (name "{C.PROJECT}") (type "KiCad") '
-                    f'(uri "${{KIPRJMOD}}/{C.PROJECT}.kicad_sym") (options "") (descr "Project symbols"))\n)\n')
-        embedded = [b.replace(f'(symbol "{n}"', f'(symbol "{C.PROJECT}:{n}"', 1) for n, b in self.lib.items()]
+                    f'\t(lib (name "{V.project}") (type "KiCad") '
+                    f'(uri "${{KIPRJMOD}}/{V.project}.kicad_sym") (options "") (descr "Project symbols"))\n)\n')
+        embedded = [b.replace(f'(symbol "{n}"', f'(symbol "{V.project}:{n}"', 1) for n, b in self.lib.items()]
         libs = "\n".join("\t\t" + b.replace("\n", "\n\t\t") for b in embedded)
         with open(path, "w", encoding="utf-8") as f:
             f.write(f'(kicad_sch\n\t(version 20250114)\n\t(generator "neopixel-star")\n'
-                    f'\t(generator_version "10.0")\n\t(uuid "{ROOT_SHEET}")\n\t(paper "A4")\n'
-                    f'\t(title_block (title "NeoPixel Star") (company "Created with sparkles by @andreban"))\n'
+                    f'\t(generator_version "10.0")\n\t(uuid "{uid("root-sheet")}")\n\t(paper "A4")\n'
+                    f'\t(title_block (title "{V.title}") (company "Created with sparkles by @andreban"))\n'
                     f'\t(lib_symbols\n{libs}\n\t)\n' + "\n".join(self.items) +
                     f'\n\t(sheet_instances (path "/" (page "1")))\n\t(embedded_fonts no)\n)\n')
 
 
-def main():
-    sh = Sheet()
-    g = 2.54
-    # Input: connector, pull-down, level shifter, series resistor, bulk caps.
-    sh.text("Input: 5V / DIN / GND. U1 (AHCT, TTL input) accepts 3.3 V or 5 V data.", 20 * g, 12 * g)
-    sh.part("J1", 22 * g, 22 * g)
+def power_flags(sh, g):
+    """+5V and GND are driven through J1's passive pins: flag them for ERC."""
     sh.power("PWR_FLAG", 14 * g, 16 * g, angle=180)
     sh.power("+5V", 14 * g, 16 * g)
     sh.power("PWR_FLAG", 14 * g, 28 * g)
     sh.power("GND", 14 * g, 28 * g)
-    sh.part("R2", 32 * g, 24 * g)
-    sh.part("U1", 44 * g, 22 * g)
-    sh.part("C11", 56 * g, 22 * g)
-    sh.part("R1", 64 * g, 22 * g)
-    sh.part("C10", 72 * g, 22 * g)
-    # LED chain: centre, then clockwise from the top point.
+
+
+def led_grid(sh, g, caps):
     sh.text("LED chain: LED1 centre, LED2 top point, then clockwise. LED9 DOUT unused.", 20 * g, 36 * g)
     for i in range(9):
         col, row = i % 3, i // 3
         x, y = (20 + col * 20) * g, (42 + row * 13) * g
         sh.part(f"LED{i + 1}", x, y)
-        sh.part(f"C{i + 1}", x + 8 * g, y)
-    sh.write(OUT)
-    print("saved", OUT)
+        if caps:
+            sh.part(f"C{i + 1}", x + 8 * g, y)
+
+
+def main():
+    global V
+    V = variants.get(sys.argv[1] if len(sys.argv) > 1 else "smd")
+    sh = Sheet()
+    g = 2.54
+    if V.key == "tht":
+        sh.text("Input: 5V / DIN / GND. WS2812D-F5 accepts 3.3 V or 5 V data directly (VIH = 2.7 V).",
+                20 * g, 12 * g)
+        sh.part("J1", 22 * g, 22 * g)
+        power_flags(sh, g)
+        sh.part("R1", 34 * g, 22 * g)
+        sh.part("C1", 44 * g, 22 * g)
+        led_grid(sh, g, caps=False)
+    else:
+        # Input: connector, pull-down, level shifter, series resistor, bulk caps.
+        sh.text("Input: 5V / DIN / GND. U1 (AHCT, TTL input) accepts 3.3 V or 5 V data.", 20 * g, 12 * g)
+        sh.part("J1", 22 * g, 22 * g)
+        power_flags(sh, g)
+        sh.part("R2", 32 * g, 24 * g)
+        sh.part("U1", 44 * g, 22 * g)
+        sh.part("C11", 56 * g, 22 * g)
+        sh.part("R1", 64 * g, 22 * g)
+        sh.part("C10", 72 * g, 22 * g)
+        led_grid(sh, g, caps=True)
+    out = os.path.join(ROOT, V.path("kicad"), V.project + ".kicad_sch")
+    os.makedirs(os.path.dirname(out), exist_ok=True)
+    sh.write(out)
+    print("saved", out)
 
 
 if __name__ == "__main__":
