@@ -1,0 +1,1588 @@
+(kicad_sch
+	(version 20250114)
+	(generator "neopixel-star")
+	(generator_version "10.0")
+	(uuid "a982fbfa-a6bc-5a14-b337-44afe085d25b")
+	(paper "A4")
+	(title_block (title "NeoPixel Star (hot-plate v2)") (company "Created with sparkles by @andreban"))
+	(lib_symbols
+		(symbol "neopixel-star-hotplate-v2:Conn_01x03_MountingPin"
+				(pin_names
+					(offset 1.016)
+					(hide yes)
+				)
+				(exclude_from_sim no)
+				(in_bom yes)
+				(on_board yes)
+				(in_pos_files yes)
+				(duplicate_pin_numbers_are_jumpers no)
+				(property "Reference" "J"
+					(at 0 5.08 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "Value" "Conn_01x03_MountingPin"
+					(at 1.27 -5.08 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+						(justify left)
+					)
+				)
+				(property "Footprint" ""
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "Datasheet" ""
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "Description" "Generic connectable mounting pin connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)"
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "ki_keywords" "connector"
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "ki_fp_filters" "Connector*:*_1x??-1MP*"
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(symbol "Conn_01x03_MountingPin_1_1"
+					(rectangle
+						(start -1.27 3.81)
+						(end 1.27 -3.81)
+						(stroke
+							(width 0.254)
+							(type default)
+						)
+						(fill
+							(type background)
+						)
+					)
+					(rectangle
+						(start -1.27 2.667)
+						(end 0 2.413)
+						(stroke
+							(width 0.1524)
+							(type default)
+						)
+						(fill
+							(type none)
+						)
+					)
+					(rectangle
+						(start -1.27 0.127)
+						(end 0 -0.127)
+						(stroke
+							(width 0.1524)
+							(type default)
+						)
+						(fill
+							(type none)
+						)
+					)
+					(rectangle
+						(start -1.27 -2.413)
+						(end 0 -2.667)
+						(stroke
+							(width 0.1524)
+							(type default)
+						)
+						(fill
+							(type none)
+						)
+					)
+					(polyline
+						(pts
+							(xy -1.016 -4.572) (xy 1.016 -4.572)
+						)
+						(stroke
+							(width 0.1524)
+							(type default)
+						)
+						(fill
+							(type none)
+						)
+					)
+					(text "Mounting"
+						(at 0 -4.191 0)
+						(effects
+							(font
+								(size 0.381 0.381)
+							)
+						)
+					)
+					(pin passive line
+						(at -5.08 2.54 0)
+						(length 3.81)
+						(name "Pin_1"
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+						(number "1"
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+					)
+					(pin passive line
+						(at -5.08 0 0)
+						(length 3.81)
+						(name "Pin_2"
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+						(number "2"
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+					)
+					(pin passive line
+						(at -5.08 -2.54 0)
+						(length 3.81)
+						(name "Pin_3"
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+						(number "3"
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+					)
+					(pin passive line
+						(at 0 -7.62 90)
+						(length 3.048)
+						(name "MountPin"
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+						(number "MP"
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+					)
+				)
+				(embedded_fonts no)
+			)
+		(symbol "neopixel-star-hotplate-v2:+5V"
+				(power global)
+				(pin_numbers
+					(hide yes)
+				)
+				(pin_names
+					(offset 0)
+					(hide yes)
+				)
+				(exclude_from_sim no)
+				(in_bom yes)
+				(on_board yes)
+				(in_pos_files yes)
+				(duplicate_pin_numbers_are_jumpers no)
+				(property "Reference" "#PWR"
+					(at 0 -3.81 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "Value" "+5V"
+					(at 0 3.556 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "Footprint" ""
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "Datasheet" ""
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "Description" "Power symbol creates a global label with name \"+5V\""
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "ki_keywords" "global power"
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(symbol "+5V_0_1"
+					(polyline
+						(pts
+							(xy -0.762 1.27) (xy 0 2.54)
+						)
+						(stroke
+							(width 0)
+							(type default)
+						)
+						(fill
+							(type none)
+						)
+					)
+					(polyline
+						(pts
+							(xy 0 2.54) (xy 0.762 1.27)
+						)
+						(stroke
+							(width 0)
+							(type default)
+						)
+						(fill
+							(type none)
+						)
+					)
+					(polyline
+						(pts
+							(xy 0 0) (xy 0 2.54)
+						)
+						(stroke
+							(width 0)
+							(type default)
+						)
+						(fill
+							(type none)
+						)
+					)
+				)
+				(symbol "+5V_1_1"
+					(pin power_in line
+						(at 0 0 90)
+						(length 0)
+						(name ""
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+						(number "1"
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+					)
+				)
+				(embedded_fonts no)
+			)
+		(symbol "neopixel-star-hotplate-v2:GND"
+				(power global)
+				(pin_numbers
+					(hide yes)
+				)
+				(pin_names
+					(offset 0)
+					(hide yes)
+				)
+				(exclude_from_sim no)
+				(in_bom yes)
+				(on_board yes)
+				(in_pos_files yes)
+				(duplicate_pin_numbers_are_jumpers no)
+				(property "Reference" "#PWR"
+					(at 0 -6.35 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "Value" "GND"
+					(at 0 -3.81 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "Footprint" ""
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "Datasheet" ""
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "ki_keywords" "global power"
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(symbol "GND_0_1"
+					(polyline
+						(pts
+							(xy 0 0) (xy 0 -1.27) (xy 1.27 -1.27) (xy 0 -2.54) (xy -1.27 -1.27) (xy 0 -1.27)
+						)
+						(stroke
+							(width 0)
+							(type default)
+						)
+						(fill
+							(type none)
+						)
+					)
+				)
+				(symbol "GND_1_1"
+					(pin power_in line
+						(at 0 0 270)
+						(length 0)
+						(name ""
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+						(number "1"
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+					)
+				)
+				(embedded_fonts no)
+			)
+		(symbol "neopixel-star-hotplate-v2:PWR_FLAG"
+				(power global)
+				(pin_numbers
+					(hide yes)
+				)
+				(pin_names
+					(offset 0)
+					(hide yes)
+				)
+				(exclude_from_sim no)
+				(in_bom yes)
+				(on_board yes)
+				(in_pos_files yes)
+				(duplicate_pin_numbers_are_jumpers no)
+				(property "Reference" "#FLG"
+					(at 0 1.905 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "Value" "PWR_FLAG"
+					(at 0 3.81 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "Footprint" ""
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "Datasheet" ""
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "Description" "Special symbol for telling ERC where power comes from"
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "ki_keywords" "flag power"
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(symbol "PWR_FLAG_0_0"
+					(pin power_out line
+						(at 0 0 90)
+						(length 0)
+						(name ""
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+						(number "1"
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+					)
+				)
+				(symbol "PWR_FLAG_0_1"
+					(polyline
+						(pts
+							(xy 0 0) (xy 0 1.27) (xy -1.016 1.905) (xy 0 2.54) (xy 1.016 1.905) (xy 0 1.27)
+						)
+						(stroke
+							(width 0)
+							(type default)
+						)
+						(fill
+							(type none)
+						)
+					)
+				)
+				(embedded_fonts no)
+			)
+		(symbol "neopixel-star-hotplate-v2:R"
+				(pin_numbers
+					(hide yes)
+				)
+				(pin_names
+					(offset 0)
+				)
+				(exclude_from_sim no)
+				(in_bom yes)
+				(on_board yes)
+				(in_pos_files yes)
+				(duplicate_pin_numbers_are_jumpers no)
+				(property "Reference" "R"
+					(at 2.032 0 90)
+					(show_name no)
+					(do_not_autoplace no)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "Value" "R"
+					(at 0 0 90)
+					(show_name no)
+					(do_not_autoplace no)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "Footprint" ""
+					(at -1.778 0 90)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "Datasheet" ""
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "Description" "Resistor"
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "ki_keywords" "R res resistor"
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "ki_fp_filters" "R_*"
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(symbol "R_0_1"
+					(rectangle
+						(start -1.016 -2.54)
+						(end 1.016 2.54)
+						(stroke
+							(width 0.254)
+							(type default)
+						)
+						(fill
+							(type none)
+						)
+					)
+				)
+				(symbol "R_1_1"
+					(pin passive line
+						(at 0 3.81 270)
+						(length 1.27)
+						(name ""
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+						(number "1"
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+					)
+					(pin passive line
+						(at 0 -3.81 90)
+						(length 1.27)
+						(name ""
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+						(number "2"
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+					)
+				)
+				(embedded_fonts no)
+			)
+		(symbol "neopixel-star-hotplate-v2:C"
+				(pin_numbers
+					(hide yes)
+				)
+				(pin_names
+					(offset 0.254)
+				)
+				(exclude_from_sim no)
+				(in_bom yes)
+				(on_board yes)
+				(in_pos_files yes)
+				(duplicate_pin_numbers_are_jumpers no)
+				(property "Reference" "C"
+					(at 0.635 2.54 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+						(justify left)
+					)
+				)
+				(property "Value" "C"
+					(at 0.635 -2.54 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+						(justify left)
+					)
+				)
+				(property "Footprint" ""
+					(at 0.9652 -3.81 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "Datasheet" ""
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "Description" "Unpolarized capacitor"
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "ki_keywords" "cap capacitor"
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "ki_fp_filters" "C_*"
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(symbol "C_0_1"
+					(polyline
+						(pts
+							(xy -2.032 0.762) (xy 2.032 0.762)
+						)
+						(stroke
+							(width 0.508)
+							(type default)
+						)
+						(fill
+							(type none)
+						)
+					)
+					(polyline
+						(pts
+							(xy -2.032 -0.762) (xy 2.032 -0.762)
+						)
+						(stroke
+							(width 0.508)
+							(type default)
+						)
+						(fill
+							(type none)
+						)
+					)
+				)
+				(symbol "C_1_1"
+					(pin passive line
+						(at 0 3.81 270)
+						(length 2.794)
+						(name ""
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+						(number "1"
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+					)
+					(pin passive line
+						(at 0 -3.81 90)
+						(length 2.794)
+						(name ""
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+						(number "2"
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+					)
+				)
+				(embedded_fonts no)
+			)
+		(symbol "neopixel-star-hotplate-v2:WS2812B"
+				(pin_names
+					(offset 0.254)
+				)
+				(exclude_from_sim no)
+				(in_bom yes)
+				(on_board yes)
+				(in_pos_files yes)
+				(duplicate_pin_numbers_are_jumpers no)
+				(property "Reference" "D"
+					(at 5.08 5.715 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+						(justify right bottom)
+					)
+				)
+				(property "Value" "WS2812B"
+					(at 1.27 -5.715 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+						(justify left top)
+					)
+				)
+				(property "Footprint" "LED_SMD:LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm"
+					(at 1.27 -7.62 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+						(justify left top)
+					)
+				)
+				(property "Datasheet" "https://cdn-shop.adafruit.com/datasheets/WS2812B.pdf"
+					(at 2.54 -9.525 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+						(justify left top)
+					)
+				)
+				(property "Description" "RGB LED with integrated controller"
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "ki_keywords" "RGB LED NeoPixel addressable"
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(property "ki_fp_filters" "LED*WS2812*PLCC*5.0x5.0mm*P3.2mm*"
+					(at 0 0 0)
+					(show_name no)
+					(do_not_autoplace no)
+					(hide yes)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(symbol "WS2812B_0_0"
+					(text "RGB"
+						(at 2.286 -4.191 0)
+						(effects
+							(font
+								(size 0.762 0.762)
+							)
+						)
+					)
+				)
+				(symbol "WS2812B_0_1"
+					(polyline
+						(pts
+							(xy 1.27 -2.54) (xy 1.778 -2.54)
+						)
+						(stroke
+							(width 0)
+							(type default)
+						)
+						(fill
+							(type none)
+						)
+					)
+					(polyline
+						(pts
+							(xy 1.27 -3.556) (xy 1.778 -3.556)
+						)
+						(stroke
+							(width 0)
+							(type default)
+						)
+						(fill
+							(type none)
+						)
+					)
+					(polyline
+						(pts
+							(xy 2.286 -1.524) (xy 1.27 -2.54) (xy 1.27 -2.032)
+						)
+						(stroke
+							(width 0)
+							(type default)
+						)
+						(fill
+							(type none)
+						)
+					)
+					(polyline
+						(pts
+							(xy 2.286 -2.54) (xy 1.27 -3.556) (xy 1.27 -3.048)
+						)
+						(stroke
+							(width 0)
+							(type default)
+						)
+						(fill
+							(type none)
+						)
+					)
+					(polyline
+						(pts
+							(xy 3.683 -1.016) (xy 3.683 -3.556) (xy 3.683 -4.064)
+						)
+						(stroke
+							(width 0)
+							(type default)
+						)
+						(fill
+							(type none)
+						)
+					)
+					(polyline
+						(pts
+							(xy 4.699 -1.524) (xy 2.667 -1.524) (xy 3.683 -3.556) (xy 4.699 -1.524)
+						)
+						(stroke
+							(width 0)
+							(type default)
+						)
+						(fill
+							(type none)
+						)
+					)
+					(polyline
+						(pts
+							(xy 4.699 -3.556) (xy 2.667 -3.556)
+						)
+						(stroke
+							(width 0)
+							(type default)
+						)
+						(fill
+							(type none)
+						)
+					)
+					(rectangle
+						(start 5.08 5.08)
+						(end -5.08 -5.08)
+						(stroke
+							(width 0.254)
+							(type default)
+						)
+						(fill
+							(type background)
+						)
+					)
+				)
+				(symbol "WS2812B_1_1"
+					(pin power_in line
+						(at 0 7.62 270)
+						(length 2.54)
+						(name "VDD"
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+						(number "1"
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+					)
+					(pin output line
+						(at 7.62 0 180)
+						(length 2.54)
+						(name "DOUT"
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+						(number "2"
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+					)
+					(pin power_in line
+						(at 0 -7.62 90)
+						(length 2.54)
+						(name "VSS"
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+						(number "3"
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+					)
+					(pin input line
+						(at -7.62 0 0)
+						(length 2.54)
+						(name "DIN"
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+						(number "4"
+							(effects
+								(font
+									(size 1.27 1.27)
+								)
+							)
+						)
+					)
+				)
+				(embedded_fonts no)
+			)
+	)
+	(text "Input: 5V / DIN / GND. WS2812B-MINI-V6 accepts 3.3 V or 5 V data directly (VIH = 0.55 x VDD)." (exclude_from_sim no) (at 50.80 30.48 0) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid "c001f057-0293-5cb2-8d92-5cf8abfa242a"))
+	(symbol (lib_id "neopixel-star-hotplate-v2:Conn_01x03_MountingPin") (at 55.88 55.88 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "4c0a624a-3a93-5edb-89e3-f10d21df356a")
+		(property "Reference" "J1" (at 55.88 50.80 0) (effects (font (size 1.27 1.27))))
+		(property "Value" "JST-PH 3p" (at 57.15 60.96 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "neopixel-star-hotplate-v2:JST_PH_S3B-PH-SM4-TB_1x03-1MP_P2.00mm_Horizontal" (at 55.88 55.88 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 55.88 55.88 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "LCSC" "C265101" (at 55.88 55.88 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "MPN" "S3B-PH-SM4-TB(LF)(SN)" (at 55.88 55.88 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Manufacturer" "JST" (at 55.88 55.88 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Description" "JST PH 2.0 mm 3-pin, SMD side entry" (at 55.88 55.88 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "cfc4f989-ddc0-584e-bd23-50d32f75e207"))
+		(pin "2" (uuid "fbae3eb4-4be1-59b6-815d-f911724c849d"))
+		(pin "3" (uuid "c461e64f-66a2-5204-a20e-23d15c909b6b"))
+		(pin "MP" (uuid "cdf8757f-02f1-5ad2-8ecc-8c4276d461cf"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "J1") (unit 1))))
+	)
+	(symbol (lib_id "neopixel-star-hotplate-v2:+5V") (at 50.80 53.34 180) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "25d3cfba-4f55-5332-93cd-24a7b6104e26")
+		(property "Reference" "#PWR01" (at 50.80 49.53 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "+5V" (at 50.80 56.90 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 50.80 53.34 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 50.80 53.34 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "8b712983-87fd-5b26-b3b0-74e0e404485b"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR01") (unit 1))))
+	)
+	(global_label "DIN" (shape passive) (at 50.80 55.88 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid "134eb2e7-f74c-589b-b52e-0742261b3e81") (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 50.80 55.88 0) (effects (font (size 1.27 1.27)) (hide yes))))
+	(symbol (lib_id "neopixel-star-hotplate-v2:GND") (at 50.80 58.42 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "81c172cd-67ae-5d7f-b04a-b5640ab95edb")
+		(property "Reference" "#PWR02" (at 50.80 64.77 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "GND" (at 50.80 62.23 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 50.80 58.42 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 50.80 58.42 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "c364dbc7-43bd-500e-8871-34a9fd7f77aa"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR02") (unit 1))))
+	)
+	(symbol (lib_id "neopixel-star-hotplate-v2:GND") (at 55.88 63.50 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "95e8010f-48c2-500a-9124-92b87b13e51a")
+		(property "Reference" "#PWR03" (at 55.88 69.85 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "GND" (at 55.88 67.31 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 55.88 63.50 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 55.88 63.50 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "0c65251c-3d14-5ac5-af29-71f9f92e2d4b"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR03") (unit 1))))
+	)
+	(symbol (lib_id "neopixel-star-hotplate-v2:PWR_FLAG") (at 35.56 40.64 180) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "99d82270-c6c3-55e5-9548-d6837cd33219")
+		(property "Reference" "#FLG04" (at 35.56 42.55 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "PWR_FLAG" (at 35.56 44.45 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 35.56 40.64 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 35.56 40.64 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "a9157ffc-fb5b-586b-bf99-9d60bf3c86af"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#FLG04") (unit 1))))
+	)
+	(symbol (lib_id "neopixel-star-hotplate-v2:+5V") (at 35.56 40.64 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "1ee539a5-fe7f-5616-aedb-5360348ee976")
+		(property "Reference" "#PWR05" (at 35.56 44.45 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "+5V" (at 35.56 37.08 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 35.56 40.64 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 35.56 40.64 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "fa033f99-a66c-51cf-9108-ce493d3c2ebf"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR05") (unit 1))))
+	)
+	(symbol (lib_id "neopixel-star-hotplate-v2:PWR_FLAG") (at 35.56 71.12 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "6ad37cd5-8640-56d4-a852-11df7884e5e8")
+		(property "Reference" "#FLG06" (at 35.56 69.22 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "PWR_FLAG" (at 35.56 67.31 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 35.56 71.12 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 35.56 71.12 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "c7a3d98a-330b-512a-825e-7f13cd7932c4"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#FLG06") (unit 1))))
+	)
+	(symbol (lib_id "neopixel-star-hotplate-v2:GND") (at 35.56 71.12 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "b24f9ee2-7ad4-5f83-b4fe-7de09085d71b")
+		(property "Reference" "#PWR07" (at 35.56 77.47 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "GND" (at 35.56 74.93 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 35.56 71.12 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 35.56 71.12 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "612800c7-2f84-557a-a206-8a30b9a605c2"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR07") (unit 1))))
+	)
+	(symbol (lib_id "neopixel-star-hotplate-v2:R") (at 91.44 55.88 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "3d77d462-fbec-5596-b140-ab7e1147eb30")
+		(property "Reference" "R1" (at 93.47 55.88 0) (effects (font (size 1.27 1.27))))
+		(property "Value" "330" (at 91.44 55.88 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "neopixel-star-hotplate-v2:R_0603_1608Metric" (at 91.44 55.88 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 91.44 55.88 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "LCSC" "C23138" (at 91.44 55.88 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "MPN" "0603WAF3300T5E" (at 91.44 55.88 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Manufacturer" "UNI-ROYAL" (at 91.44 55.88 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Description" "330 R 1% 0603, data series resistor" (at 91.44 55.88 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "5d1f7f96-8242-5a9b-975c-5fddf5f145bd"))
+		(pin "2" (uuid "25485e44-fa51-5b2b-bac1-5b79597038e4"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "R1") (unit 1))))
+	)
+	(global_label "DIN" (shape passive) (at 91.44 52.07 90) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left)) (uuid "2104b2ca-fb67-5cf0-bd84-6b4a50bb5362") (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 91.44 52.07 0) (effects (font (size 1.27 1.27)) (hide yes))))
+	(global_label "LED_DIN" (shape passive) (at 91.44 59.69 270) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid "1a5337c5-c1ca-505a-b32a-fc4d74b2e0d6") (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 91.44 59.69 0) (effects (font (size 1.27 1.27)) (hide yes))))
+	(symbol (lib_id "neopixel-star-hotplate-v2:C") (at 116.84 55.88 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "baba47a3-273e-56c4-b309-b2bdb6980093")
+		(property "Reference" "C1" (at 117.48 53.34 0) (effects (font (size 1.27 1.27))))
+		(property "Value" "10u" (at 117.48 58.42 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "neopixel-star-hotplate-v2:C_0603_1608Metric" (at 116.84 55.88 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 116.84 55.88 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "LCSC" "C19702" (at 116.84 55.88 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "MPN" "CL10A106KP8NNNC" (at 116.84 55.88 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Manufacturer" "Samsung" (at 116.84 55.88 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Description" "10 uF 10 V X5R 0603, bulk" (at 116.84 55.88 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "cd4cfcd8-fb6f-5276-abc1-5aed8653ed18"))
+		(pin "2" (uuid "98b3b7d7-efb6-5176-a8b1-2dd913bfd164"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "C1") (unit 1))))
+	)
+	(symbol (lib_id "neopixel-star-hotplate-v2:+5V") (at 116.84 52.07 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "bef2e790-e2b6-5848-8e25-801883e6a3eb")
+		(property "Reference" "#PWR08" (at 116.84 55.88 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "+5V" (at 116.84 48.51 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 116.84 52.07 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 116.84 52.07 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "d71372a9-a11e-52ad-9df3-eb2b8bc38bcb"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR08") (unit 1))))
+	)
+	(symbol (lib_id "neopixel-star-hotplate-v2:GND") (at 116.84 59.69 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "8a7e3e8d-a8b7-5b02-b7ab-1b42aacf1d9c")
+		(property "Reference" "#PWR09" (at 116.84 66.04 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "GND" (at 116.84 63.50 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 116.84 59.69 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 116.84 59.69 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "4112edbf-593c-52e8-9918-14be7be11222"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR09") (unit 1))))
+	)
+	(text "LED chain: LED1 centre, LED2 top point, then clockwise. LED9 DOUT unused." (exclude_from_sim no) (at 50.80 91.44 0) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid "58d1aefb-b5a6-5d69-9be9-29c62ce1f543"))
+	(symbol (lib_id "neopixel-star-hotplate-v2:WS2812B") (at 50.80 106.68 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "a34556d6-d1b2-5676-b0d7-50cc7b051649")
+		(property "Reference" "LED1" (at 55.88 100.97 0) (effects (font (size 1.27 1.27))))
+		(property "Value" "WS2812B-Mini" (at 52.07 112.40 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "neopixel-star-hotplate-v2:LED_WS2812B-Mini_PLCC4_3.5x3.5mm" (at 50.80 106.68 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "https://www.lcsc.com/datasheet/C52941386.pdf" (at 50.80 106.68 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "LCSC" "C52941386" (at 50.80 106.68 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "MPN" "WS2812B-MINI-V6" (at 50.80 106.68 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Manufacturer" "Worldsemi" (at 50.80 106.68 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Description" "Addressable RGB LED, 3535" (at 50.80 106.68 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "f7f943ad-949f-56c3-a1a0-e103c9860a8d"))
+		(pin "2" (uuid "06b99daf-4477-5591-a98f-74ff2e72b5fc"))
+		(pin "3" (uuid "3cbbe244-1587-5e91-a4ea-49697b21ba8d"))
+		(pin "4" (uuid "7144124f-4271-5b80-bd8a-59fe365bbaae"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "LED1") (unit 1))))
+	)
+	(symbol (lib_id "neopixel-star-hotplate-v2:+5V") (at 50.80 99.06 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "2e66b708-0a95-5a04-823a-9bfb14e510b4")
+		(property "Reference" "#PWR10" (at 50.80 102.87 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "+5V" (at 50.80 95.50 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 50.80 99.06 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 50.80 99.06 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "0dd00965-5681-51e9-81eb-ce2b92f1be55"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR10") (unit 1))))
+	)
+	(global_label "D1" (shape passive) (at 58.42 106.68 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left)) (uuid "f8ebda7a-55db-5eff-9792-704b2af14f71") (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 58.42 106.68 0) (effects (font (size 1.27 1.27)) (hide yes))))
+	(symbol (lib_id "neopixel-star-hotplate-v2:GND") (at 50.80 114.30 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "a0c5011a-ed74-5148-9fb9-2f285e5033ce")
+		(property "Reference" "#PWR11" (at 50.80 120.65 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "GND" (at 50.80 118.11 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 50.80 114.30 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 50.80 114.30 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "203773f6-5958-5d6b-a3fd-176d632a41a7"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR11") (unit 1))))
+	)
+	(global_label "LED_DIN" (shape passive) (at 43.18 106.68 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid "4850f805-a639-5838-ac84-94a8ca38e6ea") (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 43.18 106.68 0) (effects (font (size 1.27 1.27)) (hide yes))))
+	(symbol (lib_id "neopixel-star-hotplate-v2:WS2812B") (at 101.60 106.68 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "674f6cf2-ea36-5c5e-84f2-16dc11e4a1d4")
+		(property "Reference" "LED2" (at 106.68 100.97 0) (effects (font (size 1.27 1.27))))
+		(property "Value" "WS2812B-Mini" (at 102.87 112.40 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "neopixel-star-hotplate-v2:LED_WS2812B-Mini_PLCC4_3.5x3.5mm" (at 101.60 106.68 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "https://www.lcsc.com/datasheet/C52941386.pdf" (at 101.60 106.68 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "LCSC" "C52941386" (at 101.60 106.68 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "MPN" "WS2812B-MINI-V6" (at 101.60 106.68 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Manufacturer" "Worldsemi" (at 101.60 106.68 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Description" "Addressable RGB LED, 3535" (at 101.60 106.68 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "2469e41b-3ede-5151-a495-e43264ea1ea6"))
+		(pin "2" (uuid "7bdb2041-809d-5520-8416-9dfa579f5bf3"))
+		(pin "3" (uuid "0e5493ef-3001-54f7-9774-20cc1a690059"))
+		(pin "4" (uuid "914905a2-68bc-5587-8143-7f0b80a1bc0b"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "LED2") (unit 1))))
+	)
+	(symbol (lib_id "neopixel-star-hotplate-v2:+5V") (at 101.60 99.06 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "7910944b-beab-5078-9bd8-bcff073ea83f")
+		(property "Reference" "#PWR12" (at 101.60 102.87 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "+5V" (at 101.60 95.50 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 101.60 99.06 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 101.60 99.06 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "f97b326a-04cf-503f-80f5-f7681878822a"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR12") (unit 1))))
+	)
+	(global_label "D2" (shape passive) (at 109.22 106.68 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left)) (uuid "70d93a50-79d9-5101-979f-4c6dfd3cabb5") (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 109.22 106.68 0) (effects (font (size 1.27 1.27)) (hide yes))))
+	(symbol (lib_id "neopixel-star-hotplate-v2:GND") (at 101.60 114.30 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "fc4e7d76-76ed-579d-a381-8fd13371af78")
+		(property "Reference" "#PWR13" (at 101.60 120.65 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "GND" (at 101.60 118.11 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 101.60 114.30 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 101.60 114.30 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "a5fd0659-df86-5324-90e5-fa97bcb2d737"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR13") (unit 1))))
+	)
+	(global_label "D1" (shape passive) (at 93.98 106.68 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid "e9a07ce1-ac0e-5513-be9a-582871a5e1f3") (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 93.98 106.68 0) (effects (font (size 1.27 1.27)) (hide yes))))
+	(symbol (lib_id "neopixel-star-hotplate-v2:WS2812B") (at 152.40 106.68 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "554f56a2-0c46-5a32-a690-3f163499c7c9")
+		(property "Reference" "LED3" (at 157.48 100.97 0) (effects (font (size 1.27 1.27))))
+		(property "Value" "WS2812B-Mini" (at 153.67 112.40 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "neopixel-star-hotplate-v2:LED_WS2812B-Mini_PLCC4_3.5x3.5mm" (at 152.40 106.68 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "https://www.lcsc.com/datasheet/C52941386.pdf" (at 152.40 106.68 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "LCSC" "C52941386" (at 152.40 106.68 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "MPN" "WS2812B-MINI-V6" (at 152.40 106.68 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Manufacturer" "Worldsemi" (at 152.40 106.68 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Description" "Addressable RGB LED, 3535" (at 152.40 106.68 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "c98cbf05-658c-5a36-9c7f-b8a7a7d308b1"))
+		(pin "2" (uuid "b2091de0-9b63-540b-a0d0-b4eb37ed57a3"))
+		(pin "3" (uuid "520a1dcf-97ad-5c34-9966-5041bfb53864"))
+		(pin "4" (uuid "d11b6b89-9ec9-5ed8-82fb-fd9c0910bd27"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "LED3") (unit 1))))
+	)
+	(symbol (lib_id "neopixel-star-hotplate-v2:+5V") (at 152.40 99.06 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "d3df73a0-7c20-53da-a5fa-3fae7ad4dfb3")
+		(property "Reference" "#PWR14" (at 152.40 102.87 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "+5V" (at 152.40 95.50 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 152.40 99.06 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 152.40 99.06 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "830f4f20-846b-58d3-b8be-63f562c2a41b"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR14") (unit 1))))
+	)
+	(global_label "D3" (shape passive) (at 160.02 106.68 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left)) (uuid "082eb266-61c2-52d6-9f53-99d1a602bd34") (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 160.02 106.68 0) (effects (font (size 1.27 1.27)) (hide yes))))
+	(symbol (lib_id "neopixel-star-hotplate-v2:GND") (at 152.40 114.30 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "0cf99027-a327-532f-b89d-f6e845994103")
+		(property "Reference" "#PWR15" (at 152.40 120.65 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "GND" (at 152.40 118.11 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 152.40 114.30 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 152.40 114.30 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "120e9bae-0b8b-5809-9d70-4fa4c11947e6"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR15") (unit 1))))
+	)
+	(global_label "D2" (shape passive) (at 144.78 106.68 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid "7ece4c4a-632b-5711-9f89-457a22e0dfa3") (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 144.78 106.68 0) (effects (font (size 1.27 1.27)) (hide yes))))
+	(symbol (lib_id "neopixel-star-hotplate-v2:WS2812B") (at 50.80 139.70 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "af82abdc-35d2-57a7-9d31-dc9768686cd3")
+		(property "Reference" "LED4" (at 55.88 133.98 0) (effects (font (size 1.27 1.27))))
+		(property "Value" "WS2812B-Mini" (at 52.07 145.41 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "neopixel-star-hotplate-v2:LED_WS2812B-Mini_PLCC4_3.5x3.5mm" (at 50.80 139.70 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "https://www.lcsc.com/datasheet/C52941386.pdf" (at 50.80 139.70 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "LCSC" "C52941386" (at 50.80 139.70 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "MPN" "WS2812B-MINI-V6" (at 50.80 139.70 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Manufacturer" "Worldsemi" (at 50.80 139.70 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Description" "Addressable RGB LED, 3535" (at 50.80 139.70 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "68a4729b-a716-5af2-b365-17207591d45b"))
+		(pin "2" (uuid "2cf3afc5-f5f9-5483-9199-71685f05bd20"))
+		(pin "3" (uuid "ae279bd9-2cb3-50b4-bca1-146696283a2e"))
+		(pin "4" (uuid "34977855-a64f-5c23-ae31-fc90079a15d0"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "LED4") (unit 1))))
+	)
+	(symbol (lib_id "neopixel-star-hotplate-v2:+5V") (at 50.80 132.08 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "34d89e34-4bf5-5885-aa99-6a740a0a2dac")
+		(property "Reference" "#PWR16" (at 50.80 135.89 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "+5V" (at 50.80 128.52 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 50.80 132.08 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 50.80 132.08 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "45a5b2cc-763f-5a52-a8a3-e991321ccd9d"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR16") (unit 1))))
+	)
+	(global_label "D4" (shape passive) (at 58.42 139.70 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left)) (uuid "f92191ea-acbb-5a78-9ede-b5773bdac9f3") (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 58.42 139.70 0) (effects (font (size 1.27 1.27)) (hide yes))))
+	(symbol (lib_id "neopixel-star-hotplate-v2:GND") (at 50.80 147.32 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "20303ce1-6c6f-5535-b5c6-f6dba09aa99d")
+		(property "Reference" "#PWR17" (at 50.80 153.67 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "GND" (at 50.80 151.13 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 50.80 147.32 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 50.80 147.32 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "d8f5d747-ec96-52c5-ae25-fe00761e7e59"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR17") (unit 1))))
+	)
+	(global_label "D3" (shape passive) (at 43.18 139.70 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid "52b791e4-2de3-5414-8e40-b670eaf3afd1") (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 43.18 139.70 0) (effects (font (size 1.27 1.27)) (hide yes))))
+	(symbol (lib_id "neopixel-star-hotplate-v2:WS2812B") (at 101.60 139.70 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "5dbd09ec-06cc-55e8-b370-d3d436f7cde5")
+		(property "Reference" "LED5" (at 106.68 133.98 0) (effects (font (size 1.27 1.27))))
+		(property "Value" "WS2812B-Mini" (at 102.87 145.41 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "neopixel-star-hotplate-v2:LED_WS2812B-Mini_PLCC4_3.5x3.5mm" (at 101.60 139.70 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "https://www.lcsc.com/datasheet/C52941386.pdf" (at 101.60 139.70 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "LCSC" "C52941386" (at 101.60 139.70 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "MPN" "WS2812B-MINI-V6" (at 101.60 139.70 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Manufacturer" "Worldsemi" (at 101.60 139.70 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Description" "Addressable RGB LED, 3535" (at 101.60 139.70 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "c3187d6f-723b-5ebd-a1c1-1918ad565f2e"))
+		(pin "2" (uuid "9be77e62-b785-5f3a-a220-03bab40358f5"))
+		(pin "3" (uuid "b146eba9-6300-5c89-b30f-3c7054ee12f3"))
+		(pin "4" (uuid "99c1378f-df22-5b97-ac14-4359a2e8ca17"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "LED5") (unit 1))))
+	)
+	(symbol (lib_id "neopixel-star-hotplate-v2:+5V") (at 101.60 132.08 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "ba0e111c-1160-517b-bfb0-e82d7f87eeac")
+		(property "Reference" "#PWR18" (at 101.60 135.89 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "+5V" (at 101.60 128.52 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 101.60 132.08 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 101.60 132.08 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "c2451f7f-2090-5040-8fd9-d65efaef3b9f"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR18") (unit 1))))
+	)
+	(global_label "D5" (shape passive) (at 109.22 139.70 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left)) (uuid "04e15b99-99d8-58e7-a4fe-d1c16bdf67d8") (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 109.22 139.70 0) (effects (font (size 1.27 1.27)) (hide yes))))
+	(symbol (lib_id "neopixel-star-hotplate-v2:GND") (at 101.60 147.32 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "e8e84b6d-2061-5db8-b00d-66e55b509056")
+		(property "Reference" "#PWR19" (at 101.60 153.67 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "GND" (at 101.60 151.13 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 101.60 147.32 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 101.60 147.32 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "808af9c7-304e-5675-9029-d69ddfb688fd"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR19") (unit 1))))
+	)
+	(global_label "D4" (shape passive) (at 93.98 139.70 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid "6942d2b2-fc46-515b-969a-7ed475808cfa") (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 93.98 139.70 0) (effects (font (size 1.27 1.27)) (hide yes))))
+	(symbol (lib_id "neopixel-star-hotplate-v2:WS2812B") (at 152.40 139.70 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "c6c2f06e-1be2-566e-917c-fcc5ad36613e")
+		(property "Reference" "LED6" (at 157.48 133.98 0) (effects (font (size 1.27 1.27))))
+		(property "Value" "WS2812B-Mini" (at 153.67 145.41 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "neopixel-star-hotplate-v2:LED_WS2812B-Mini_PLCC4_3.5x3.5mm" (at 152.40 139.70 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "https://www.lcsc.com/datasheet/C52941386.pdf" (at 152.40 139.70 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "LCSC" "C52941386" (at 152.40 139.70 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "MPN" "WS2812B-MINI-V6" (at 152.40 139.70 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Manufacturer" "Worldsemi" (at 152.40 139.70 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Description" "Addressable RGB LED, 3535" (at 152.40 139.70 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "f82b6592-7da0-5f59-9cf5-94b2183aebad"))
+		(pin "2" (uuid "7668525c-2a82-5876-8a0a-69318af4fbc1"))
+		(pin "3" (uuid "2230bbea-6146-5000-832d-6d7dc0092817"))
+		(pin "4" (uuid "f88e71b6-1d71-547d-a2b4-e073922688c5"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "LED6") (unit 1))))
+	)
+	(symbol (lib_id "neopixel-star-hotplate-v2:+5V") (at 152.40 132.08 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "50b4d6b5-835f-58a1-b679-7076ce0eb7c1")
+		(property "Reference" "#PWR20" (at 152.40 135.89 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "+5V" (at 152.40 128.52 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 152.40 132.08 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 152.40 132.08 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "4ac0dd48-de21-5959-954d-5cb6ad1d054f"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR20") (unit 1))))
+	)
+	(global_label "D6" (shape passive) (at 160.02 139.70 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left)) (uuid "814f6ada-811d-5fa9-a0d8-880d83d9ed48") (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 160.02 139.70 0) (effects (font (size 1.27 1.27)) (hide yes))))
+	(symbol (lib_id "neopixel-star-hotplate-v2:GND") (at 152.40 147.32 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "0e173c14-7b17-57bf-8346-40aa45fca4c7")
+		(property "Reference" "#PWR21" (at 152.40 153.67 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "GND" (at 152.40 151.13 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 152.40 147.32 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 152.40 147.32 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "ef525e24-70fd-523c-b4f3-69d1784cbd5c"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR21") (unit 1))))
+	)
+	(global_label "D5" (shape passive) (at 144.78 139.70 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid "68137420-33fb-5134-8b46-16aa2d0049da") (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 144.78 139.70 0) (effects (font (size 1.27 1.27)) (hide yes))))
+	(symbol (lib_id "neopixel-star-hotplate-v2:WS2812B") (at 50.80 172.72 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "37bf743f-7db8-503e-aee8-a1ad9d00462e")
+		(property "Reference" "LED7" (at 55.88 167.00 0) (effects (font (size 1.27 1.27))))
+		(property "Value" "WS2812B-Mini" (at 52.07 178.44 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "neopixel-star-hotplate-v2:LED_WS2812B-Mini_PLCC4_3.5x3.5mm" (at 50.80 172.72 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "https://www.lcsc.com/datasheet/C52941386.pdf" (at 50.80 172.72 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "LCSC" "C52941386" (at 50.80 172.72 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "MPN" "WS2812B-MINI-V6" (at 50.80 172.72 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Manufacturer" "Worldsemi" (at 50.80 172.72 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Description" "Addressable RGB LED, 3535" (at 50.80 172.72 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "182569b5-8c9c-5a43-a0e1-4de4518754d9"))
+		(pin "2" (uuid "e65d7a7a-b8e3-5094-9f9a-cc06be634dbc"))
+		(pin "3" (uuid "30598ce6-1b9b-5505-b3a9-9ff9d14b9776"))
+		(pin "4" (uuid "73b48536-534f-522a-ae80-17b88a9e784a"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "LED7") (unit 1))))
+	)
+	(symbol (lib_id "neopixel-star-hotplate-v2:+5V") (at 50.80 165.10 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "4ddd770b-b844-5127-9b6a-67d31f012709")
+		(property "Reference" "#PWR22" (at 50.80 168.91 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "+5V" (at 50.80 161.54 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 50.80 165.10 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 50.80 165.10 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "2382e030-fb9f-5eaf-8fe5-9cd59afbbc66"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR22") (unit 1))))
+	)
+	(global_label "D7" (shape passive) (at 58.42 172.72 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left)) (uuid "a61ba482-7bdf-5071-ba97-8279f2264141") (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 58.42 172.72 0) (effects (font (size 1.27 1.27)) (hide yes))))
+	(symbol (lib_id "neopixel-star-hotplate-v2:GND") (at 50.80 180.34 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "60f3c6d4-df42-5f1a-9b5e-23268682fd16")
+		(property "Reference" "#PWR23" (at 50.80 186.69 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "GND" (at 50.80 184.15 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 50.80 180.34 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 50.80 180.34 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "21c40a6c-0548-5de4-9b0a-eea5d087c24a"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR23") (unit 1))))
+	)
+	(global_label "D6" (shape passive) (at 43.18 172.72 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid "d113cc20-4d88-51a5-9a59-1f327d02f20e") (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 43.18 172.72 0) (effects (font (size 1.27 1.27)) (hide yes))))
+	(symbol (lib_id "neopixel-star-hotplate-v2:WS2812B") (at 101.60 172.72 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "747327b2-d860-544d-81c2-be8fae1fd74b")
+		(property "Reference" "LED8" (at 106.68 167.00 0) (effects (font (size 1.27 1.27))))
+		(property "Value" "WS2812B-Mini" (at 102.87 178.44 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "neopixel-star-hotplate-v2:LED_WS2812B-Mini_PLCC4_3.5x3.5mm" (at 101.60 172.72 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "https://www.lcsc.com/datasheet/C52941386.pdf" (at 101.60 172.72 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "LCSC" "C52941386" (at 101.60 172.72 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "MPN" "WS2812B-MINI-V6" (at 101.60 172.72 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Manufacturer" "Worldsemi" (at 101.60 172.72 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Description" "Addressable RGB LED, 3535" (at 101.60 172.72 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "0b4c7ebb-5360-53a4-9979-7ac495cdd795"))
+		(pin "2" (uuid "1d918484-4890-5b54-b985-c0a56f292387"))
+		(pin "3" (uuid "be3a4b1e-5c96-5fde-9fd3-eb4f789764b4"))
+		(pin "4" (uuid "a43eb311-076e-5d25-afaf-66327aee5406"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "LED8") (unit 1))))
+	)
+	(symbol (lib_id "neopixel-star-hotplate-v2:+5V") (at 101.60 165.10 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "e2385cb3-e400-5635-bb8d-0d038dce4abb")
+		(property "Reference" "#PWR24" (at 101.60 168.91 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "+5V" (at 101.60 161.54 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 101.60 165.10 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 101.60 165.10 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "57601ded-1f19-5a4b-ada2-0fa7226a285a"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR24") (unit 1))))
+	)
+	(global_label "D8" (shape passive) (at 109.22 172.72 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left)) (uuid "6102c971-a634-5aee-9d8c-7dd9a99645a0") (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 109.22 172.72 0) (effects (font (size 1.27 1.27)) (hide yes))))
+	(symbol (lib_id "neopixel-star-hotplate-v2:GND") (at 101.60 180.34 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "a2a1f0a0-f3a4-54e4-bfaf-c6709fc92360")
+		(property "Reference" "#PWR25" (at 101.60 186.69 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "GND" (at 101.60 184.15 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 101.60 180.34 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 101.60 180.34 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "f460357b-75be-534b-aff1-479e0166a0fb"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR25") (unit 1))))
+	)
+	(global_label "D7" (shape passive) (at 93.98 172.72 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid "af59de59-821f-5970-bff4-9a23b5cd0fe8") (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 93.98 172.72 0) (effects (font (size 1.27 1.27)) (hide yes))))
+	(symbol (lib_id "neopixel-star-hotplate-v2:WS2812B") (at 152.40 172.72 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "dc34c7cf-e327-5797-96fb-451a2891c2b0")
+		(property "Reference" "LED9" (at 157.48 167.00 0) (effects (font (size 1.27 1.27))))
+		(property "Value" "WS2812B-Mini" (at 153.67 178.44 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "neopixel-star-hotplate-v2:LED_WS2812B-Mini_PLCC4_3.5x3.5mm" (at 152.40 172.72 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "https://www.lcsc.com/datasheet/C52941386.pdf" (at 152.40 172.72 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "LCSC" "C52941386" (at 152.40 172.72 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "MPN" "WS2812B-MINI-V6" (at 152.40 172.72 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Manufacturer" "Worldsemi" (at 152.40 172.72 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Description" "Addressable RGB LED, 3535" (at 152.40 172.72 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "b2cd61af-ff75-5513-b754-6408e73427dc"))
+		(pin "2" (uuid "e7edf85d-8db9-51b1-b997-78e1386814c5"))
+		(pin "3" (uuid "dadf2524-62bc-54f9-99e7-8882f55e7fc2"))
+		(pin "4" (uuid "1c448c33-e5ed-5db5-a572-4a0dbf2b86cf"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "LED9") (unit 1))))
+	)
+	(symbol (lib_id "neopixel-star-hotplate-v2:+5V") (at 152.40 165.10 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "dbce769e-3c4d-5aaf-b38a-7db6a95b745e")
+		(property "Reference" "#PWR26" (at 152.40 168.91 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "+5V" (at 152.40 161.54 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 152.40 165.10 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 152.40 165.10 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "3807aa9c-426b-5eb8-bcb1-6ddd8319408c"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR26") (unit 1))))
+	)
+	(no_connect (at 160.02 172.72) (uuid "82c51402-b355-538e-9722-6c8df9dde690"))
+	(symbol (lib_id "neopixel-star-hotplate-v2:GND") (at 152.40 180.34 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (uuid "81c33088-ef26-5f02-9b28-f0b10e457336")
+		(property "Reference" "#PWR27" (at 152.40 186.69 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Value" "GND" (at 152.40 184.15 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 152.40 180.34 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "~" (at 152.40 180.34 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(pin "1" (uuid "627c95ba-b0d5-5593-bd5a-44e6ad397ec2"))
+		(instances (project "neopixel-star-hotplate-v2" (path "/a982fbfa-a6bc-5a14-b337-44afe085d25b" (reference "#PWR27") (unit 1))))
+	)
+	(global_label "D8" (shape passive) (at 144.78 172.72 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid "f1c957bd-131c-5ac2-a8c8-aec21ad074d3") (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 144.78 172.72 0) (effects (font (size 1.27 1.27)) (hide yes))))
+	(sheet_instances (path "/" (page "1")))
+	(embedded_fonts no)
+)

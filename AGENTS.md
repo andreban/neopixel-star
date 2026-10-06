@@ -15,14 +15,15 @@ is and how to order it, and [PLAN.md](PLAN.md) for why it is designed this way.
   `KiCad.app/Contents` on macOS. Never hardcode a machine-specific path in the repo.
 - **Python 3** for `build_all.py` and `build_schematic.py`. No third-party packages are needed.
 
-## Two variants
+## Variants
 
-The same scripts build three boards, registered in `scripts/common/variants.py`:
+The same scripts build four boards, registered in `scripts/common/variants.py`:
 
 | Variant | Outputs | Scripts |
 |---|---|---|
 | `smd` | `smd/kicad/`, `smd/fab/`, `smd/easyeda/`, `smd/docs/` | `scripts/smd/` |
-| `hotplate` | `hotplate/kicad/`, `hotplate/fab/`, `hotplate/easyeda/`, `hotplate/docs/` | `scripts/hotplate/` |
+| `hotplate/v1` | `hotplate/v1/kicad/`, `hotplate/v1/fab/`, `hotplate/v1/easyeda/`, `hotplate/v1/docs/` | `scripts/hotplate/v1/` |
+| `hotplate/v2` | `hotplate/v2/kicad/`, `hotplate/v2/fab/`, `hotplate/v2/easyeda/`, `hotplate/v2/docs/` | `scripts/hotplate/v2/` |
 | `tht` | `tht/kicad/`, `tht/fab/`, `tht/easyeda/`, `tht/docs/` | `scripts/tht/` |
 
 Each variant's scripts are `parts.py` (the single source of truth for its parts, nets and BOM data),
@@ -32,12 +33,12 @@ variant must not alter the other's outputs.
 
 ## Everything is generated
 
-`smd/`, `hotplate/` and `tht/` hold **build outputs**, except their `README.md` files. Never hand-edit them: the
+`smd/`, `hotplate/v1/`, `hotplate/v2/` and `tht/` hold **build outputs**, except their `README.md` files. Never hand-edit them: the
 next build overwrites the changes. Make changes in `scripts/`, then rebuild:
 
 ```sh
 python scripts/build_all.py          # all variants
-python scripts/build_all.py tht      # one variant: smd, hotplate or tht
+python scripts/build_all.py tht      # one variant (or prefix): smd, hotplate, hotplate/v1, hotplate/v2 or tht
 ```
 
 A change is done only when this build finishes. It runs ERC, DRC and schematic parity, and **exits on
@@ -92,13 +93,16 @@ offsets (`+v` = clockwise side of an LED) to board coordinates.
 ## Constraints that aren't obvious (hot-plate)
 
 - **The point of the variant:** everything that needs paste is on the front; the back holds only
-  J1 and U1 (iron-solderable). Don't add paste parts to the back.
+  iron-solderable parts (`J1` and `U1` on `hotplate/v1`; `J1` alone on `hotplate/v2`). Don't add
+  paste parts to the back.
 - **Vias beside the LEDs, not under them.** A 3535 body has no room for two vias. DIN sits on the
   LED's counter-clockwise side, DOUT and GND on its clockwise side. The space under each LED stays
   free on the back so the GND pour flows through, and the ring of hops doesn't create islands.
 - **Hops run inward along the LED's side** before crossing to the notch. Cutting straight from a
   long-point LED toward the notch passes too close to the edge.
-- **No per-LED capacitors** (WS2812B-MINI-V3 datasheet). U1 stays: DIN needs 0.63 × VDD.
+- **No per-LED capacitors** (`WS2812B-MINI-V3/W` and `WS2812B-MINI-V6` datasheets). On `v1`, `U1`
+  stays because V3/W needs $0.63 \times V_{DD}$ on `DIN`; on `v2`, V6 lowers $V_{IH}$ to
+  $0.55 \times V_{DD}$ ($2.75\text{ V}$ at $5\text{ V}$), so `U1`, `C2` and `R2` are omitted.
 - **Title and gold logo on the front**, below the centre LED; credit and pin labels on the back.
   The artwork helpers in `common/board.py` (`title`, `logo`, `credit`, `pin_labels`) take a side;
   `artwork()` is the standard all-on-the-back arrangement used by the other variants.

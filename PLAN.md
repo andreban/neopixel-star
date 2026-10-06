@@ -120,19 +120,22 @@ the original plan:
 - **Components on one side:** all on the front except J1. Two copper layers.
 - **Front silkscreen** is kept for hand assembly: an LED flat-side mark, and C1/R1 marks.
 
-## Hot-plate variant (built)
+## Hot-plate variants (built)
 
-Built into `hotplate/`; see `hotplate/README.md`. For home assembly: the front reflows on a hot plate
-with the back bare, then J1 and U1 go on the back with an iron.
+Built into `hotplate/v1/` and `hotplate/v2/`; see `hotplate/README.md`. For home assembly: the
+front reflows on a hot plate with the back bare, then the back-side parts go on with an iron.
 
-- **LEDs:** Worldsemi WS2812B-MINI-V3/W, 3535 (C527089): same pinout as the 5050 WS2812B, and no
-  per-LED capacitors needed (datasheet V3). Not SK6812MINI-**E**: that is a reverse-mount part.
 - **Size 50 mm** (user's choice of 3535 over growing the star). LEDs at 17.0 / 13.0 mm, further into
   the points than the 5050 board.
-- **0603 passives** (user's choice): C1 10 µF (C19702), C2 100 nF (C14663), R1 330 Ω (C23138),
-  R2 100 kΩ (C25803). All on the front.
-- **Back:** J1 (SMD JST, same as the SMD board) and U1 (74AHCT1G125, kept because DIN needs
-  0.63 × VDD = 3.15 V). Same positions as the SMD board, so the artwork is identical.
+- **v1 (`hotplate/v1/`):** Worldsemi WS2812B-MINI-V3/W, 3535 (C527089). No per-LED capacitors
+  needed, but DIN requires $0.63 \times V_{DD} = 3.15\text{ V}$, so U1 (74AHCT1G125) is kept on the
+  back alongside J1, with 0603 passives C1 10 µF (C19702), C2 100 nF (C14663), R1 330 Ω (C23138)
+  and R2 100 kΩ (C25803) on the front.
+- **v2 (`hotplate/v2/`):** Worldsemi WS2812B-MINI-V6, 3535 (C52941386). Same package and pinout,
+  with $V_{IH}$ lowered to $0.55 \times V_{DD} = 2.75\text{ V}$ at 5 V, so 3.3 V data works
+  directly. U1, C2 and R2 are dropped: only C1 and R1 sit beside the LEDs on the front, and only J1
+  is on the back.
 - **Front silkscreen kept:** LED outlines with pin-1 marks, for hand placement.
-- **LEDs are MSL 5a:** bake before reflow (documented in the README).
+- **LEDs are MSL 5a:** bake before reflow (documented in the READMEs).
+
 

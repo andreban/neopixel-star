@@ -1,0 +1,5 @@
+Item #,Designator,Qty,Manufacturer,Mfg Part #,Description / Value,Package/Footprint,Type,LCSC Part #
+1,C1,1,Samsung,CL10A106KP8NNNC,"10u - 10 uF 10 V X5R 0603, bulk",C_0603_1608Metric,THT,C19702
+2,J1,1,JST,S3B-PH-SM4-TB(LF)(SN),"JST-PH 3p - JST PH 2.0 mm 3-pin, SMD side entry",JST_PH_S3B-PH-SM4-TB_1x03-1MP_P2.00mm_Horizontal,THT,C265101
+3,"LED1,LED2,LED3,LED4,LED5,LED6,LED7,LED8,LED9",9,Worldsemi,WS2812B-MINI-V6,"WS2812B-Mini - Addressable RGB LED, 3535",LED_WS2812B-Mini_PLCC4_3.5x3.5mm,THT,C52941386
+4,R1,1,UNI-ROYAL,0603WAF3300T5E,"330 - 330 R 1% 0603, data series resistor",R_0603_1608Metric,THT,C23138
