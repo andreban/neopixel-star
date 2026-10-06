@@ -4,12 +4,12 @@ A star-shaped NeoPixel board in the spirit of the Adafruit Jewel. The outline is
 sparkle from the [Modern Web Guidance logo](reference/mwg-logo.svg), uniformly scaled. Nine
 addressable RGB LEDs: one in the centre, one in each of the 8 points.
 
-| SMD ([smd/](smd/README.md)) | Hot-plate ([hotplate/](hotplate/README.md)) | Through-hole ([tht/](tht/README.md)) |
+| SMD ([smd/](smd/README.md)) | Hot-plate ([hotplate/](hotplate/README.md): [v1](hotplate/v1/README.md) / [v2](hotplate/v2/README.md)) | Through-hole ([tht/](tht/README.md)) |
 |---|---|---|
-| ![SMD version](smd/docs/angle-front.png) | ![Hot-plate version](hotplate/docs/angle-front.png) | ![Through-hole version](tht/docs/angle-front.png) |
+| ![SMD version](smd/docs/angle-front.png) | ![Hot-plate version](hotplate/v2/docs/angle-front.png) | ![Through-hole version](tht/docs/angle-front.png) |
 | 50 mm · 9 × WS2812B (5050) | 50 mm · 9 × WS2812B-Mini (3535) | 55 mm · 9 × WS2812D-F5 (5 mm) |
-| Fab-assembled, parts on both sides | Front reflowed on a hot plate, 2 parts on the back by iron | Hand-soldered |
-| 74AHCT1G125 level shifter, 100 nF per LED | 74AHCT1G125 level shifter, 0603 passives | LEDs take 3.3 V data directly |
+| Fab-assembled, parts on both sides | Front reflowed on a hot plate, back soldered by iron | Hand-soldered |
+| 74AHCT1G125 level shifter, 100 nF per LED | 0603 passives; [v1](hotplate/v1/README.md) with level shifter, [v2](hotplate/v2/README.md) direct 3.3 V data | LEDs take 3.3 V data directly |
 
 All versions share:
 
@@ -73,7 +73,7 @@ Silkscreen colour is an order option, not part of the files.
 **ENIG** surface finish (this is what makes the logo gold) · 1 oz copper.
 
 Version-specific steps, BOM and placement files: [SMD](smd/README.md#ordering) ·
-[hot-plate](hotplate/README.md#ordering) · [through-hole](tht/README.md#ordering).
+[hot-plate v1](hotplate/v1/README.md#ordering) / [v2](hotplate/v2/README.md#ordering) · [through-hole](tht/README.md#ordering).
 
 ## Opening in KiCad or EasyEDA
 
@@ -86,10 +86,10 @@ the project zipped for EasyEDA Pro (*File → Import → KiCad*) and the exact o
 
 | Path | Contents |
 |---|---|
-| `smd/`, `hotplate/`, `tht/` | One folder per version: `README.md`, `kicad/` (project and libraries), `fab/` (Gerbers, BOM, placement), `easyeda/`, `docs/` (renders, schematic PDF) |
+| `smd/`, `hotplate/v1/`, `hotplate/v2/`, `tht/` | One folder per version: `README.md`, `kicad/` (project and libraries), `fab/` (Gerbers, BOM, placement), `easyeda/`, `docs/` (renders, schematic PDF) |
 | `scripts/` | Generators: everything in the version folders except the READMEs is built from these |
-| `scripts/common/` | Code shared by both versions: outline, logo, design rules, board and schematic helpers |
-| `scripts/smd/`, `scripts/hotplate/`, `scripts/tht/` | Per version: `parts.py` (parts and nets), `layout.py` (placement and routing), `schematic.py` |
+| `scripts/common/` | Code shared by all versions: outline, logo, design rules, board and schematic helpers |
+| `scripts/smd/`, `scripts/hotplate/v1/`, `scripts/hotplate/v2/`, `scripts/tht/` | Per version: `parts.py` (parts and nets), `layout.py` (placement and routing), `schematic.py` |
 | `reference/` | The source logo SVG |
 | `PLAN.md` | Design decisions and their reasoning |
 | `AGENTS.md` | How to change the design (for AI agents and humans) |
@@ -101,7 +101,7 @@ installation directory.
 
 ```sh
 python scripts/build_all.py          # all versions
-python scripts/build_all.py tht      # just one: smd, hotplate or tht
+python scripts/build_all.py tht      # one version: smd, hotplate, hotplate/v1, hotplate/v2 or tht
 ```
 
 For each version, this regenerates the schematic and board, refills the pours with KiCad's zone

@@ -113,10 +113,11 @@ def bom_groups():
 
 def write_csv(path, header, rows):
     with open(path, "w", newline="", encoding="utf-8") as f:
-        w = csv.writer(f)
+        w = csv.writer(f, lineterminator="\n")
         w.writerow(header)
         w.writerows(rows)
     print("  ->", os.path.relpath(path, ROOT))
+
 
 
 def jlcpcb(pos):
@@ -191,9 +192,10 @@ def build(key):
 
 
 def main():
-    for key in sys.argv[1:] or variants.ALL:
+    for key in variants.resolve(sys.argv[1:]):
         build(key)
 
 
 if __name__ == "__main__":
     main()
+

@@ -1,0 +1,4 @@
+(fp_lib_table
+	(version 7)
+	(lib (name "neopixel-star-hotplate-v2") (type "KiCad") (uri "${KIPRJMOD}/neopixel-star-hotplate-v2.pretty") (options "") (descr "Project footprints"))
+)

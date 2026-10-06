@@ -22,7 +22,7 @@ class Variant:
         return "/".join((self.key,) + parts)
 
     def module(self, name):
-        return importlib.import_module(f"{self.key}.{name}")
+        return importlib.import_module(f"{self.key.replace('/', '.')}.{name}")
 
     @property
     def parts(self):
@@ -31,10 +31,14 @@ class Variant:
 
 VARIANTS = {
     "smd": Variant("smd", "neopixel-star", "", "NeoPixel Star", 50.0, 0.3, False),
-    # Hot-plate friendly: all small parts on the front, only J1 and U1 on the
-    # back. Front silkscreen kept: the LEDs are placed by hand onto paste.
-    "hotplate": Variant("hotplate", "neopixel-star-hotplate", "hotplate/", "NeoPixel Star (hot-plate)",
-                        50.0, 0.3, True),
+    # Hot-plate friendly: all paste parts on the front, reflowed in one pass.
+    # Front silkscreen kept so the LEDs can be placed by hand.
+    # v1: WS2812B-MINI-V3/W + U1 level shifter (J1 and U1 on the back).
+    # v2: WS2812B-MINI-V6 (VIH = 0.55 x VDD, no level shifter; only J1 on the back).
+    "hotplate/v1": Variant("hotplate/v1", "neopixel-star-hotplate", "hotplate/", "NeoPixel Star (hot-plate)",
+                           50.0, 0.3, True),
+    "hotplate/v2": Variant("hotplate/v2", "neopixel-star-hotplate-v2", "hotplate/v2/", "NeoPixel Star (hot-plate v2)",
+                           50.0, 0.3, True),
     # 55 mm: at 50 mm the staggered LED pads only fit with the LEDs pulled in
     # so far that the top LED's leads end up under J1's housing. The 0.25 mm
     # pour clearance lets the pours pass between the staggered pads.
@@ -45,3 +49,12 @@ ALL = tuple(VARIANTS)
 
 def get(key):
     return VARIANTS[key]
+
+
+def resolve(keys):
+    """Expand shorthand prefixes (e.g. 'hotplate' -> ['hotplate/v1', 'hotplate/v2'])."""
+    out = []
+    for k in keys or ALL:
+        out.extend([v for v in ALL if v.startswith(k + "/")] or [k])
+    return out
+
