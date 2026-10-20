@@ -184,28 +184,31 @@ def pcbway(pos):
 def renders(out):
     """3D renders. The ray tracer never gives the same bytes twice, so they're
     redone only when the KiCad project, the render settings or KiCad itself
-    changed since the last render (fingerprint kept in build/)."""
+    changed since the last render. The fingerprint is committed with them
+    (docs/renders.sha256), so a fresh checkout keeps the committed PNGs."""
     jobs = [(name, ["--side", side, "--use-board-stackup-colors", "--quality", "high", "--width", "1600",
                     "--height", "1600", "--background", "transparent"])
             for side, name in (("top", "front"), ("bottom", "back"))]
     jobs += [(name, ["--side", side, "--perspective", "--rotate", rot, "--zoom", "0.9",
                      "--use-board-stackup-colors", "--quality", "high", "--width", "1600", "--height", "1200"])
              for side, rot, name in (("top", "-50,0,20", "angle-front"), ("bottom", "-50,0,200", "angle-back"))]
-    h = hashlib.sha256(repr(jobs).encode() + run(CLI, "version").encode())
+    h = hashlib.sha256(repr(jobs).encode() + run(CLI, "version").strip().encode())
     for f in sorted(glob.glob(os.path.join(KICAD, "**", "*"), recursive=True)):
         # Skip KiCad's local state (gitignored), which changes whenever the project is opened.
         if os.path.isfile(f) and not re.search(r"\.kicad_prl$|fp-info-cache$|-backups[\\/]|\.lck$", f):
-            h.update(os.path.relpath(f, KICAD).replace(os.sep, "/").encode() + open(f, "rb").read())
-    stamp = os.path.join(BUILD, "renders.sha256")
+            # Line endings stripped: KiCad writes CRLF on Windows, LF elsewhere.
+            h.update(os.path.relpath(f, KICAD).replace(os.sep, "/").encode()
+                     + open(f, "rb").read().replace(b"\r", b""))
+    stamp = os.path.join(out, "renders.sha256")
     pngs = [os.path.join(out, f"{name}.png") for name, _ in jobs]
-    if (os.path.exists(stamp) and open(stamp).read() == h.hexdigest()
+    if (os.path.exists(stamp) and open(stamp).read().strip() == h.hexdigest()
             and all(os.path.exists(p) for p in pngs)):
         print("  renders: project unchanged, kept")
         return
     for (name, args), png in zip(jobs, pngs):
         run(CLI, "pcb", "render", *args, "-o", png, PCB)
-    with open(stamp, "w") as f:
-        f.write(h.hexdigest())
+    with open(stamp, "w", newline="\n") as f:
+        f.write(h.hexdigest() + "\n")
 
 
 def docs():

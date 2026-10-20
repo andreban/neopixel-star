@@ -55,8 +55,8 @@ tree after a build means something really changed. This relies on:
   `publish()` in `build_all.py` leaves a file alone when only those timestamps changed, and zips get
   fixed entry dates.
 - **Renders only when needed.** The ray-traced PNGs differ on every run, so they're redone only when the
-  KiCad project, the render settings or the KiCad version changes (fingerprint in `build/`, so a fresh
-  checkout renders once).
+  KiCad project, the render settings or the KiCad version changes. The fingerprint is committed with
+  them (`docs/renders.sha256`), so a fresh checkout keeps the committed PNGs. Commit it with the PNGs.
 
 The committed outputs were built with **KiCad 10.0.6**. Another version may produce different bytes;
 commit that churn on its own, separate from design changes.
