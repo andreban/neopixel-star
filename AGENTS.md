@@ -46,9 +46,20 @@ any violation**, including warnings. Don't suppress or exclude checks to get it 
 
 Commit the regenerated outputs together with the script change that produced them.
 
-The committed outputs were built with **KiCad 10.0.6**. Another KiCad version can save the board in a
-different footprint order and render different PNG/PDF bytes, so a rebuild changes files even when the
-design didn't. Commit that churn on its own, separate from design changes, or rebuild with 10.0.6.
+Builds are reproducible: a rebuild with no design change leaves every output byte-identical, so a dirty
+tree after a build means something really changed. This relies on:
+
+- **Seeded UUIDs.** `build_board.py` seeds KiCad's UUID generator per variant. Unseeded, every item gets
+  a random UUID, and KiCad saves footprints sorted by UUID, so the board file reshuffles on each build.
+- **Timestamps ignored.** KiCad stamps Gerbers, drill files and PDFs with the time they were made.
+  `publish()` in `build_all.py` leaves a file alone when only those timestamps changed, and zips get
+  fixed entry dates.
+- **Renders only when needed.** The ray-traced PNGs differ on every run, so they're redone only when the
+  KiCad project, the render settings or the KiCad version changes (fingerprint in `build/`, so a fresh
+  checkout renders once).
+
+The committed outputs were built with **KiCad 10.0.6**. Another version may produce different bytes;
+commit that churn on its own, separate from design changes.
 
 ## Where things live
 
