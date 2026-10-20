@@ -86,7 +86,7 @@ the project zipped for EasyEDA Pro (*File → Import → KiCad*) and the exact o
 
 | Path | Contents |
 |---|---|
-| `smd/`, `hotplate/v1/`, `hotplate/v2/`, `tht/` | One folder per version: `README.md`, `kicad/` (project and libraries), `fab/` (Gerbers, BOM, placement), `easyeda/`, `docs/` (renders, schematic PDF) |
+| `smd/`, `hotplate/v1/`, `hotplate/v2/`, `tht/` | One folder per version: `README.md`, `kicad/` (project and libraries), `fab/` (Gerbers, BOM, placement), `easyeda/`, `docs/` (renders, assembly drawings, schematic PDF) |
 | `scripts/` | Generators: everything in the version folders except the READMEs is built from these |
 | `scripts/common/` | Code shared by all versions: outline, logo, design rules, board and schematic helpers |
 | `scripts/smd/`, `scripts/hotplate/v1/`, `scripts/hotplate/v2/`, `scripts/tht/` | Per version: `parts.py` (parts and nets), `layout.py` (placement and routing), `schematic.py` |
@@ -106,7 +106,8 @@ python scripts/build_all.py tht      # one version: smd, hotplate, hotplate/v1, 
 
 For each version, this regenerates the schematic and board, refills the pours with KiCad's zone
 filler, and runs ERC and DRC with schematic parity. The build stops on any violation. It then
-exports the Gerbers, the JLCPCB/PCBWay BOM and placement files, the EasyEDA package and the renders.
+exports the Gerbers, the JLCPCB/PCBWay BOM and placement files, the EasyEDA package, the renders and
+the assembly drawings (SVG, plus a printable PDF).
 
 ## Credits
 

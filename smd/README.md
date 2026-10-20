@@ -7,8 +7,11 @@ code notes, see the [main README](../README.md).
 |---|---|
 | ![front](docs/front.png) | ![back](docs/back.png) |
 | ![front, angled](docs/angle-front.png) | ![back, angled](docs/angle-back.png) |
+| ![front, which part goes where](docs/assembly-front.svg) | ![back, which part goes where](docs/assembly-back.svg) |
 
 Schematic: [docs/schematic.pdf](docs/schematic.pdf)
+
+Assembly drawing, front and back, for printing: [docs/assembly.pdf](docs/assembly.pdf)
 
 > **Status:** passes KiCad ERC and DRC, including schematic parity. Not manufactured or tested yet.
 > Treat the first order as a prototype run.

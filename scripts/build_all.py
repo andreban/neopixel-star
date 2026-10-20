@@ -5,10 +5,13 @@
 1. schematic + symbol library           (build_schematic.py)
 2. board + footprint library            (build_board.py, KiCad's Python)
 3. zone fill, ERC, DRC with schematic parity; any violation fails the build
-4. Gerbers/drill, JLCPCB + PCBWay BOM/placement, renders, EasyEDA package
+4. Gerbers/drill, JLCPCB + PCBWay BOM/placement, renders, assembly drawings,
+   EasyEDA package
 """
 import csv
 import glob
+import hashlib
+import io
 import os
 import re
 import shutil
@@ -18,6 +21,7 @@ import zipfile
 from collections import defaultdict
 
 sys.path.insert(0, os.path.dirname(__file__))
+from common import assembly
 from common import config as C
 from common import variants
 
@@ -53,6 +57,40 @@ def fresh(path):
     return path
 
 
+# KiCad stamps Gerbers, drill files and PDFs with the time they were made. A
+# file whose only change is a timestamp is left as it is, so a rebuild without
+# a design change doesn't rewrite it.
+STAMP = re.compile(rb"\d{4}-\d\d-\d\d[T ]\d\d:\d\d:\d\d(?:[+-]\d\d:\d\d)?|\(D:[^)]*\)")
+
+
+def unstamped(data):
+    return STAMP.sub(b"", data)
+
+
+def zip_unstamped(data):
+    with zipfile.ZipFile(io.BytesIO(data)) as z:
+        return [(n, unstamped(z.read(n))) for n in z.namelist()]
+
+
+def publish(path, data, key=unstamped):
+    """Write `data` to `path`, unless the file there differs only in timestamps."""
+    if os.path.exists(path) and key(open(path, "rb").read()) == key(data):
+        return
+    with open(path, "wb") as f:
+        f.write(data)
+
+
+def zipped(files):
+    """Zip of (path, name) pairs with fixed entry dates, so equal files give an equal zip."""
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:
+        for path, name in files:
+            info = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
+            info.external_attr = 0o644 << 16    # rw-r--r--
+            z.writestr(info, open(path, "rb").read(), zipfile.ZIP_DEFLATED)
+    return buf.getvalue()
+
+
 # --------------------------------------------------------------------------- generate + check
 def generate():
     run(sys.executable, os.path.join(ROOT, "scripts", "build_schematic.py"), V.key)
@@ -83,9 +121,7 @@ def gerbers():
     run(CLI, "pcb", "export", "drill", "--format", "excellon", "--excellon-separate-th",
         "--generate-map", "--map-format", "gerberx2", "-o", out + os.sep, PCB)
     zpath = os.path.join(FAB, f"{V.project}-gerbers.zip")
-    with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED) as z:
-        for f in sorted(os.listdir(out)):
-            z.write(os.path.join(out, f), f)
+    publish(zpath, zipped((os.path.join(out, f), f) for f in sorted(os.listdir(out))), zip_unstamped)
     print("  ->", os.path.relpath(zpath, ROOT))
 
 
@@ -145,33 +181,62 @@ def pcbway(pos):
                for r in sorted(pos, key=lambda r: natural(r["Ref"]))])
 
 
+def renders(out):
+    """3D renders. The ray tracer never gives the same bytes twice, so they're
+    redone only when the KiCad project, the render settings or KiCad itself
+    changed since the last render. The fingerprint is committed with them
+    (docs/renders.sha256), so a fresh checkout keeps the committed PNGs."""
+    jobs = [(name, ["--side", side, "--use-board-stackup-colors", "--quality", "high", "--width", "1600",
+                    "--height", "1600", "--background", "transparent"])
+            for side, name in (("top", "front"), ("bottom", "back"))]
+    jobs += [(name, ["--side", side, "--perspective", "--rotate", rot, "--zoom", "0.9",
+                     "--use-board-stackup-colors", "--quality", "high", "--width", "1600", "--height", "1200"])
+             for side, rot, name in (("top", "-50,0,20", "angle-front"), ("bottom", "-50,0,200", "angle-back"))]
+    h = hashlib.sha256(repr(jobs).encode() + run(CLI, "version").strip().encode())
+    for f in sorted(glob.glob(os.path.join(KICAD, "**", "*"), recursive=True)):
+        # Skip KiCad's local state (gitignored), which changes whenever the project is opened.
+        if os.path.isfile(f) and not re.search(r"\.kicad_prl$|fp-info-cache$|-backups[\\/]|\.lck$", f):
+            # Line endings stripped: KiCad writes CRLF on Windows, LF elsewhere.
+            h.update(os.path.relpath(f, KICAD).replace(os.sep, "/").encode()
+                     + open(f, "rb").read().replace(b"\r", b""))
+    stamp = os.path.join(out, "renders.sha256")
+    pngs = [os.path.join(out, f"{name}.png") for name, _ in jobs]
+    if (os.path.exists(stamp) and open(stamp).read().strip() == h.hexdigest()
+            and all(os.path.exists(p) for p in pngs)):
+        print("  renders: project unchanged, kept")
+        return
+    for (name, args), png in zip(jobs, pngs):
+        run(CLI, "pcb", "render", *args, "-o", png, PCB)
+    with open(stamp, "w", newline="\n") as f:
+        f.write(h.hexdigest() + "\n")
+
+
 def docs():
     out = os.path.join(ROOT, V.path("docs"))
     os.makedirs(out, exist_ok=True)
-    for side, name in (("top", "front"), ("bottom", "back")):
-        run(CLI, "pcb", "render", "--side", side, "--use-board-stackup-colors", "--quality", "high",
-            "--width", "1600", "--height", "1600", "--background", "transparent",
-            "-o", os.path.join(out, f"{name}.png"), PCB)
-    for side, rot, name in (("top", "-50,0,20", "angle-front"), ("bottom", "-50,0,200", "angle-back")):
-        run(CLI, "pcb", "render", "--side", side, "--perspective", "--rotate", rot, "--zoom", "0.9",
-            "--use-board-stackup-colors", "--quality", "high", "--width", "1600", "--height", "1200",
-            "-o", os.path.join(out, f"{name}.png"), PCB)
-    run(CLI, "sch", "export", "pdf", "-o", os.path.join(out, "schematic.pdf"), SCH)
-    print(f"  -> {V.path('docs')}/*.png, schematic.pdf")
+    renders(out)
+    pdf = os.path.join(BUILD, "schematic.pdf")
+    run(CLI, "sch", "export", "pdf", "-o", pdf, SCH)
+    publish(os.path.join(out, "schematic.pdf"), open(pdf, "rb").read())
+    # Assembly drawings: which part goes where. Pin 1 marked on everything but plain C/R.
+    assembly.write(PCB, out, V.title,
+                   {ref: f"{p.value}: {p.description}" if p.description else p.value
+                    for ref, p in V.parts.items()},
+                   {ref for ref, p in V.parts.items() if p.symbol not in ("Device:C", "Device:R")})
+    print(f"  -> {V.path('docs')}/*.png, assembly-*.svg, assembly.pdf, schematic.pdf")
 
 
 def easyeda():
     """KiCad project zipped the way KiCad's own "Archive Project" does, for
     EasyEDA Pro's File > Import > KiCad, plus a bare outline DXF."""
-    out = fresh(os.path.join(ROOT, V.path("easyeda")))
+    out = os.path.join(ROOT, V.path("easyeda"))
+    os.makedirs(out, exist_ok=True)
     zpath = os.path.join(out, f"{V.project}-kicad.zip")
     files = [os.path.join(KICAD, f) for f in
              (f"{V.project}.kicad_pro", f"{V.project}.kicad_sch", f"{V.project}.kicad_pcb",
               f"{V.project}.kicad_sym", "fp-lib-table", "sym-lib-table")]
-    files += glob.glob(os.path.join(KICAD, f"{V.project}.pretty", "*.kicad_mod"))
-    with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED) as z:
-        for f in files:
-            z.write(f, os.path.relpath(f, KICAD))
+    files += sorted(glob.glob(os.path.join(KICAD, f"{V.project}.pretty", "*.kicad_mod")))
+    publish(zpath, zipped((f, os.path.relpath(f, KICAD).replace(os.sep, "/")) for f in files), zip_unstamped)
     run(CLI, "pcb", "export", "dxf", "--layers", "Edge.Cuts", "--output-units", "mm",
         "--mode-single", "-o", os.path.join(out, "outline.dxf"), PCB)
     print("  ->", os.path.relpath(zpath, ROOT), "and outline.dxf")

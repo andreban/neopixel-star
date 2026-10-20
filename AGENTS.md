@@ -46,6 +46,21 @@ any violation**, including warnings. Don't suppress or exclude checks to get it 
 
 Commit the regenerated outputs together with the script change that produced them.
 
+Builds are reproducible: a rebuild with no design change leaves every output byte-identical, so a dirty
+tree after a build means something really changed. This relies on:
+
+- **Seeded UUIDs.** `build_board.py` seeds KiCad's UUID generator per variant. Unseeded, every item gets
+  a random UUID, and KiCad saves footprints sorted by UUID, so the board file reshuffles on each build.
+- **Timestamps ignored.** KiCad stamps Gerbers, drill files and PDFs with the time they were made.
+  `publish()` in `build_all.py` leaves a file alone when only those timestamps changed, and zips get
+  fixed entry dates.
+- **Renders only when needed.** The ray-traced PNGs differ on every run, so they're redone only when the
+  KiCad project, the render settings or the KiCad version changes. The fingerprint is committed with
+  them (`docs/renders.sha256`), so a fresh checkout keeps the committed PNGs. Commit it with the PNGs.
+
+The committed outputs were built with **KiCad 10.0.6**. Another version may produce different bytes;
+commit that churn on its own, separate from design changes.
+
 ## Where things live
 
 | File | Role |
@@ -60,6 +75,8 @@ Commit the regenerated outputs together with the script change that produced the
 | `scripts/common/schematic.py` | Schematic machinery: symbol extraction/correction, the `Sheet` writer |
 | `scripts/common/geometry.py` | Star outline parsed from the SVG path (lines + cubic Béziers), no deps |
 | `scripts/common/logo.py` | Logo polygons from `reference/mwg-logo.svg` |
+| `scripts/common/assembly.py` | Assembly drawings (`docs/assembly-*.svg`, `docs/assembly.pdf`): parts, pin 1 and references per side, read from the saved `.kicad_pcb`. Plain Python |
+| `scripts/common/pdf.py` | Minimal SVG → PDF for the assembly drawings (built-in Helvetica, no deps) |
 | `scripts/common/model_jst.py` | Generated VRML model for the SMD J1 (KiCad ships none) |
 | `scripts/<variant>/parts.py` | That variant's parts: footprints, pin→net maps, values, LCSC/MPN, datasheets |
 | `scripts/<variant>/layout.py` | That variant's LED radii, placement, routing and artwork positions |
