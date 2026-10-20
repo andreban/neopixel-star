@@ -186,26 +186,29 @@ def fit(svg_text, size=A4):
     return min((size[0] - 2 * m) / vw, (size[1] - 2 * m) / vh)
 
 
-def page(svg_text, s, size=A4):
-    """PDF content stream drawing one SVG at scale `s`, centred on the page."""
+def page(svg_text, s, top, size=A4):
+    """PDF content stream drawing one SVG at scale `s`, centred across the
+    page, its top `top` pt below the page's top edge."""
     root = ET.fromstring(svg_text)
     vx, vy, vw, vh = view_box(svg_text)
     pw, ph = size
     tx = (pw - s * vw) / 2 - s * vx
-    ty = ph - (ph - s * vh) / 2 + s * vy
+    ty = ph - top + s * vy
     return f"q {num(s)} 0 0 {num(-s)} {num(tx)} {num(ty)} cm 1 j\n{render(root, {})}Q\n"
 
 
 def write(path, svgs, size=A4):
-    """One page per SVG, all at the same scale. Deterministic output (no
-    dates), so rebuilds don't churn."""
+    """One page per SVG, all at the same scale and top edge, so the boards
+    line up when printed double-sided. Deterministic output (no dates), so
+    rebuilds don't churn."""
     s = min(fit(svg, size) for svg in svgs)
+    top = (size[1] - s * max(view_box(svg)[3] for svg in svgs)) / 2
     objs = ["<< /Type /Catalog /Pages 2 0 R >>", None,
             "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>",
             "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>"]
     kids = []
     for svg in svgs:
-        stream = page(svg, s, size).encode("latin-1")
+        stream = page(svg, s, top, size).encode("latin-1")
         objs.append(f"<< /Length {len(stream)} >>\nstream\n".encode("latin-1") + stream + b"endstream")
         objs.append(f"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 {num(size[0])} {num(size[1])}] "
                     f"/Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents {len(objs)} 0 R >>")

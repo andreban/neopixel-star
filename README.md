@@ -106,7 +106,8 @@ python scripts/build_all.py tht      # one version: smd, hotplate, hotplate/v1, 
 
 For each version, this regenerates the schematic and board, refills the pours with KiCad's zone
 filler, and runs ERC and DRC with schematic parity. The build stops on any violation. It then
-exports the Gerbers, the JLCPCB/PCBWay BOM and placement files, the EasyEDA package and the renders.
+exports the Gerbers, the JLCPCB/PCBWay BOM and placement files, the EasyEDA package, the renders and
+the assembly drawings (SVG, plus a printable PDF).
 
 ## Credits
 

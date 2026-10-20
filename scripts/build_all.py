@@ -164,7 +164,7 @@ def docs():
                    {ref: f"{p.value}: {p.description}" if p.description else p.value
                     for ref, p in V.parts.items()},
                    {ref for ref, p in V.parts.items() if p.symbol not in ("Device:C", "Device:R")})
-    print(f"  -> {V.path('docs')}/*.png, assembly-*.svg, schematic.pdf")
+    print(f"  -> {V.path('docs')}/*.png, assembly-*.svg, assembly.pdf, schematic.pdf")
 
 
 def easyeda():

@@ -46,6 +46,10 @@ any violation**, including warnings. Don't suppress or exclude checks to get it 
 
 Commit the regenerated outputs together with the script change that produced them.
 
+The committed outputs were built with **KiCad 10.0.6**. Another KiCad version can save the board in a
+different footprint order and render different PNG/PDF bytes, so a rebuild changes files even when the
+design didn't. Commit that churn on its own, separate from design changes, or rebuild with 10.0.6.
+
 ## Where things live
 
 | File | Role |
