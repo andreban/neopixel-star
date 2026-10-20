@@ -7,6 +7,7 @@ data order, built from through-hole parts. It is **55 mm** tip to tip (the SMD b
 |---|---|
 | ![front](docs/front.png) | ![back](docs/back.png) |
 | ![front, angled](docs/angle-front.png) | ![back, angled](docs/angle-back.png) |
+| ![front, which part goes where](docs/assembly-front.svg) | ![back, which part goes where](docs/assembly-back.svg) |
 
 Schematic: [docs/schematic.pdf](docs/schematic.pdf)
 

@@ -5,7 +5,8 @@
 1. schematic + symbol library           (build_schematic.py)
 2. board + footprint library            (build_board.py, KiCad's Python)
 3. zone fill, ERC, DRC with schematic parity; any violation fails the build
-4. Gerbers/drill, JLCPCB + PCBWay BOM/placement, renders, EasyEDA package
+4. Gerbers/drill, JLCPCB + PCBWay BOM/placement, renders, assembly drawings,
+   EasyEDA package
 """
 import csv
 import glob
@@ -18,6 +19,7 @@ import zipfile
 from collections import defaultdict
 
 sys.path.insert(0, os.path.dirname(__file__))
+from common import assembly
 from common import config as C
 from common import variants
 
@@ -157,7 +159,12 @@ def docs():
             "--use-board-stackup-colors", "--quality", "high", "--width", "1600", "--height", "1200",
             "-o", os.path.join(out, f"{name}.png"), PCB)
     run(CLI, "sch", "export", "pdf", "-o", os.path.join(out, "schematic.pdf"), SCH)
-    print(f"  -> {V.path('docs')}/*.png, schematic.pdf")
+    # Assembly drawings: which part goes where. Pin 1 marked on everything but plain C/R.
+    assembly.write(PCB, out, V.title,
+                   {ref: f"{p.value}: {p.description}" if p.description else p.value
+                    for ref, p in V.parts.items()},
+                   {ref for ref, p in V.parts.items() if p.symbol not in ("Device:C", "Device:R")})
+    print(f"  -> {V.path('docs')}/*.png, assembly-*.svg, schematic.pdf")
 
 
 def easyeda():

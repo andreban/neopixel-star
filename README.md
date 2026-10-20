@@ -86,7 +86,7 @@ the project zipped for EasyEDA Pro (*File → Import → KiCad*) and the exact o
 
 | Path | Contents |
 |---|---|
-| `smd/`, `hotplate/v1/`, `hotplate/v2/`, `tht/` | One folder per version: `README.md`, `kicad/` (project and libraries), `fab/` (Gerbers, BOM, placement), `easyeda/`, `docs/` (renders, schematic PDF) |
+| `smd/`, `hotplate/v1/`, `hotplate/v2/`, `tht/` | One folder per version: `README.md`, `kicad/` (project and libraries), `fab/` (Gerbers, BOM, placement), `easyeda/`, `docs/` (renders, assembly drawings, schematic PDF) |
 | `scripts/` | Generators: everything in the version folders except the READMEs is built from these |
 | `scripts/common/` | Code shared by all versions: outline, logo, design rules, board and schematic helpers |
 | `scripts/smd/`, `scripts/hotplate/v1/`, `scripts/hotplate/v2/`, `scripts/tht/` | Per version: `parts.py` (parts and nets), `layout.py` (placement and routing), `schematic.py` |
