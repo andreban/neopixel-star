@@ -13,6 +13,8 @@ an iron. 50 mm, 3535 LEDs. For the shared wiring, power and code notes, see the
 
 Schematic: [docs/schematic.pdf](docs/schematic.pdf)
 
+Assembly drawing, front and back, for printing: [docs/assembly.pdf](docs/assembly.pdf)
+
 > **Status:** passes KiCad ERC and DRC, including schematic parity. Not manufactured or tested yet.
 
 ## How it differs from the SMD board and [hot-plate v1](../v1/README.md)

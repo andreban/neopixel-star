@@ -1,4 +1,5 @@
-"""Assembly drawings: which part goes where, one SVG per side.
+"""Assembly drawings: which part goes where, one SVG per side, plus a PDF
+with all sides for printing.
 
 Read straight from the saved .kicad_pcb, so this is plain Python (no
 pcbnew). Each side shows the board outline, the pads, the fab-layer body of
@@ -10,6 +11,8 @@ import math
 import os
 import re
 from collections import OrderedDict
+
+from common import pdf
 
 MARGIN = 2.0          # mm around the board
 LEGEND_ROW = 3.2      # mm per legend row
@@ -103,7 +106,7 @@ def inside(poly, x, y):
 
 
 def arc_path(start, mid, end):
-    """SVG arc through three points."""
+    """Arc through three points, as cubic Béziers (PDF has no arcs)."""
     (x1, y1), (x2, y2), (x3, y3) = start, mid, end
     d = 2 * (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2))
     if abs(d) < 1e-9:
@@ -111,10 +114,19 @@ def arc_path(start, mid, end):
     ux = ((x1**2 + y1**2) * (y2 - y3) + (x2**2 + y2**2) * (y3 - y1) + (x3**2 + y3**2) * (y1 - y2)) / d
     uy = ((x1**2 + y1**2) * (x3 - x2) + (x2**2 + y2**2) * (x1 - x3) + (x3**2 + y3**2) * (x2 - x1)) / d
     r = math.hypot(x1 - ux, y1 - uy)
-    sweep = 1 if (x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1) > 0 else 0
+    sweep = 1 if (x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1) > 0 else -1
     a1, a3 = math.atan2(y1 - uy, x1 - ux), math.atan2(y3 - uy, x3 - ux)
-    span = (a3 - a1 if sweep else a1 - a3) % (2 * math.pi)
-    return f"M{fmt(x1)},{fmt(y1)} A{fmt(r)},{fmt(r)} 0 {int(span > math.pi)} {sweep} {fmt(x3)},{fmt(y3)}"
+    span = sweep * ((a3 - a1) * sweep % (2 * math.pi))
+    n = max(1, math.ceil(abs(span) / (math.pi / 2)))
+    step = span / n
+    k = 4 / 3 * math.tan(step / 4) * r
+    d = [f"M{fmt(x1)},{fmt(y1)}"]
+    for i in range(n):
+        a, b = a1 + i * step, a1 + (i + 1) * step
+        d.append(f"C{fmt(ux + r * math.cos(a) - k * math.sin(a))},{fmt(uy + r * math.sin(a) + k * math.cos(a))} "
+                 f"{fmt(ux + r * math.cos(b) + k * math.sin(b))},{fmt(uy + r * math.sin(b) - k * math.cos(b))} "
+                 f"{fmt(ux + r * math.cos(b))},{fmt(uy + r * math.sin(b))}")
+    return " ".join(d)
 
 
 def outline(pcb):
@@ -270,8 +282,13 @@ def pad_corners(pad):
 
 
 # --------------------------------------------------------------------------- labels
+def baseline(y, size):
+    """Baseline that centres capitals on y."""
+    return y + 0.36 * size
+
+
 def text_box(x, y, text, size=LABEL):
-    w = 0.62 * size * len(text)
+    w = pdf.text_width(text, size, bold=True)
     return x - w / 2, y - size / 2, x + w / 2, y + size / 2
 
 
@@ -301,7 +318,7 @@ def place_labels(parts, obstacles, board, flip):
     def candidates(f):
         x0, y0, x1, y1 = outer[f.ref]
         cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
-        w, h, gap = 0.62 * LABEL * len(f.ref), LABEL, 0.35
+        w, h, gap = pdf.text_width(f.ref, LABEL, bold=True), LABEL, 0.35
         return [(cx + dx * ((x1 - x0) / 2 + w / 2 + gap), cy + dy * ((y1 - y0) / 2 + h / 2 + gap))
                 for dx, dy in ((0, -1), (0, 1), (1, 0), (-1, 0), (1, -1), (-1, -1), (1, 1), (-1, 1))]
 
@@ -377,7 +394,7 @@ def drawing(pcb, fps, side, title, values, polarized):
     obstacles = [flip(b) for f in fps for b in f.pad_boxes(cu)]
     flipped_board = [(2 * cx - x, y) for x, y in board] if mirror else board
     spots = place_labels(own, obstacles, flipped_board, flip)
-    labels = "".join(f'<text x="{fmt(x)}" y="{fmt(y)}">{esc(ref)}</text>' for ref, (x, y) in spots.items())
+    labels = "".join(f'<text x="{fmt(x)}" y="{fmt(baseline(y, LABEL))}">{esc(ref)}</text>' for ref, (x, y) in spots.items())
 
     left, top = x0 - MARGIN, y0 - MARGIN - 5
     width = x1 - x0 + 2 * MARGIN
@@ -385,13 +402,13 @@ def drawing(pcb, fps, side, title, values, polarized):
     for (prefix, value), refs in groups.items():
         fill, stroke = COLOURS.get(prefix, OTHER)
         legend.append(f'<rect x="{fmt(x0)}" y="{fmt(y)}" width="2.2" height="2.2" rx="0.3" fill="{fill}" '
-                      f'stroke="{stroke}" stroke-width="0.15"/><text x="{fmt(x0 + 3.2)}" y="{fmt(y + 1.1)}">'
+                      f'stroke="{stroke}" stroke-width="0.15"/><text x="{fmt(x0 + 3.2)}" y="{fmt(baseline(y + 1.1, 1.5))}">'
                       f'<tspan font-weight="bold">{esc(ranges(refs))}</tspan>  {esc(value)}</text>')
         y += LEGEND_ROW
     if marked:
         plus = any(f.prefix == "C" for f in marked)
         legend.append(f'<rect x="{fmt(x0 + 0.4)}" y="{fmt(y + 0.4)}" width="1.4" height="1.4" rx="0.2" '
-                      f'fill="{PIN1}"/><text x="{fmt(x0 + 3.2)}" y="{fmt(y + 1.1)}">'
+                      f'fill="{PIN1}"/><text x="{fmt(x0 + 3.2)}" y="{fmt(baseline(y + 1.1, 1.5))}">'
                       f'pin 1{" (+ on capacitors)" if plus else ""}</text>')
         y += LEGEND_ROW
     height = y + MARGIN - top
@@ -406,23 +423,27 @@ def drawing(pcb, fps, side, title, values, polarized):
         f'<text x="{fmt(x0)}" y="{fmt(top + 4.6)}" font-size="1.4" fill="#666666">{note}</text></g>'
         f'{geometry}'
         f'<g font-family="{FONT}" font-size="{fmt(LABEL)}" font-weight="bold" fill="{INK}" text-anchor="middle" '
-        f'dominant-baseline="central" stroke="#ffffff" stroke-width="0.3" paint-order="stroke" '
+        f'stroke="#ffffff" stroke-width="0.3" paint-order="stroke" '
         f'stroke-linejoin="round">{labels}</g>'
-        f'<g font-family="{FONT}" font-size="1.5" fill="{INK}" dominant-baseline="central">'
+        f'<g font-family="{FONT}" font-size="1.5" fill="{INK}">'
         f'{"".join(legend)}</g></svg>\n')
 
 
 def write(pcb_path, out_dir, title, values, polarized):
-    """Write assembly-<side>.svg for each side that has parts. `values` maps
-    reference -> legend text; `polarized` is the set of references whose pin 1
-    is marked. Returns the files written."""
+    """Write assembly-<side>.svg for each side that has parts, and
+    assembly.pdf with one A4 page per side. `values` maps reference -> legend
+    text; `polarized` is the set of references whose pin 1 is marked. Returns
+    the files written."""
     pcb = parse(open(pcb_path, encoding="utf-8").read())
     fps = sorted((Footprint(n) for n in kids(pcb, "footprint")), key=lambda f: natural(f.ref))
-    written = []
+    written, svgs = [], []
     for side in ("front", "back"):
         if any(f.side == side for f in fps):
+            svgs.append(drawing(pcb, fps, side, title, values, polarized))
             path = os.path.join(out_dir, f"assembly-{side}.svg")
             with open(path, "w", encoding="utf-8", newline="\n") as fh:
-                fh.write(drawing(pcb, fps, side, title, values, polarized))
+                fh.write(svgs[-1])
             written.append(path)
+    written.append(os.path.join(out_dir, "assembly.pdf"))
+    pdf.write(written[-1], svgs)
     return written

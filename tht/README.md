@@ -11,6 +11,8 @@ data order, built from through-hole parts. It is **55 mm** tip to tip (the SMD b
 
 Schematic: [docs/schematic.pdf](docs/schematic.pdf)
 
+Assembly drawing, front and back, for printing: [docs/assembly.pdf](docs/assembly.pdf)
+
 > **Status:** passes KiCad ERC and DRC, including schematic parity. Not manufactured or tested yet.
 
 ## How it differs from the SMD board

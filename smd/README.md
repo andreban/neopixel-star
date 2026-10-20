@@ -11,6 +11,8 @@ code notes, see the [main README](../README.md).
 
 Schematic: [docs/schematic.pdf](docs/schematic.pdf)
 
+Assembly drawing, front and back, for printing: [docs/assembly.pdf](docs/assembly.pdf)
+
 > **Status:** passes KiCad ERC and DRC, including schematic parity. Not manufactured or tested yet.
 > Treat the first order as a prototype run.
 

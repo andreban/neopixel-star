@@ -60,7 +60,8 @@ Commit the regenerated outputs together with the script change that produced the
 | `scripts/common/schematic.py` | Schematic machinery: symbol extraction/correction, the `Sheet` writer |
 | `scripts/common/geometry.py` | Star outline parsed from the SVG path (lines + cubic Béziers), no deps |
 | `scripts/common/logo.py` | Logo polygons from `reference/mwg-logo.svg` |
-| `scripts/common/assembly.py` | Assembly drawings (`docs/assembly-*.svg`): parts, pin 1 and references per side, read from the saved `.kicad_pcb`. Plain Python |
+| `scripts/common/assembly.py` | Assembly drawings (`docs/assembly-*.svg`, `docs/assembly.pdf`): parts, pin 1 and references per side, read from the saved `.kicad_pcb`. Plain Python |
+| `scripts/common/pdf.py` | Minimal SVG → PDF for the assembly drawings (built-in Helvetica, no deps) |
 | `scripts/common/model_jst.py` | Generated VRML model for the SMD J1 (KiCad ships none) |
 | `scripts/<variant>/parts.py` | That variant's parts: footprints, pin→net maps, values, LCSC/MPN, datasheets |
 | `scripts/<variant>/layout.py` | That variant's LED radii, placement, routing and artwork positions |
