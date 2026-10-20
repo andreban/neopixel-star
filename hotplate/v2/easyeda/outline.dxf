@@ -569,7 +569,7 @@ BLOCKS
   0
 BLOCK
   5
-22
+23
 330
 1A
 100
@@ -595,7 +595,7 @@ AcDbBlockBegin
   0
 ENDBLK
   5
-23
+22
 330
 1A
 100
@@ -606,34 +606,6 @@ AcDbEntity
 AcDbBlockEnd
   0
 BLOCK
-  5
-24
-330
-1B
-100
-AcDbEntity
- 67
-1
-  8
-0
-100
-AcDbBlockBegin
-  2
-*Paper_Space
- 70
-0
- 10
-0.0
- 20
-0.0
- 30
-0.0
-  3
-*Paper_Space
-  1
-
-  0
-ENDBLK
   5
 25
 330
@@ -645,11 +617,39 @@ AcDbEntity
   8
 0
 100
+AcDbBlockBegin
+  2
+*Paper_Space
+ 70
+0
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  3
+*Paper_Space
+  1
+
+  0
+ENDBLK
+  5
+24
+330
+1B
+100
+AcDbEntity
+ 67
+1
+  8
+0
+100
 AcDbBlockEnd
   0
 BLOCK
   5
-26
+27
 330
 1C
 100
@@ -677,7 +677,7 @@ AcDbBlockBegin
   0
 ENDBLK
   5
-27
+26
 330
 1C
 100
@@ -126297,7 +126297,7 @@ AcDbLine
  11
 110.7996069999999946
  21
--95.9340440000000001
+-95.9340449999999976
  31
 0
   0
@@ -126317,7 +126317,7 @@ AcDbLine
  10
 110.7996069999999946
  20
--95.9340440000000001
+-95.9340449999999976
  30
 0
  11
