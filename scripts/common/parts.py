@@ -20,6 +20,11 @@ class Part:
     symbol_name: str = ""
     pin_numbers: dict = field(default_factory=dict)
     nc_pin_name: str = "DOUT"   # symbol pin name of the unconnected pin (LED9's data out)
+    # Symbol pin names by pin number, for parts with several unconnected pins.
+    pin_names: dict = field(default_factory=dict)
+
+    def pin_name(self, pad):
+        return self.pin_names.get(pad, self.nc_pin_name)
 
 
 def board_net(net, ref=None, pad=None, pin_name=None):

@@ -1,0 +1,4 @@
+(sym_lib_table
+	(version 7)
+	(lib (name "neopixel-star-xiao") (type "KiCad") (uri "${KIPRJMOD}/neopixel-star-xiao.kicad_sym") (options "") (descr "Project symbols"))
+)

@@ -12,11 +12,13 @@ import re
 from common import config as C
 from common import parts
 from common import variants
+from common import xiao
 
 SYM_LIB = C.SYM_LIB
 FONT = "(effects (font (size 1.27 1.27)))"
 HIDDEN = "(effects (font (size 1.27 1.27)) (hide yes))"
 V = variants.get("smd")      # current variant, set by build_schematic.py
+GENERATED = {"XIAO": xiao.symbol}   # symbols KiCad doesn't ship, by name
 
 
 def uid(name):
@@ -48,6 +50,9 @@ def lib_symbol(lib_id, rename=None, pin_numbers=None):
     `rename` and `pin_numbers` (stock -> real) make a corrected copy for parts
     whose pinout differs from the stock symbol's."""
     lib, name = lib_id.split(":")
+    if lib == "generated":
+        # Not in KiCad's libraries: written by our own code.
+        return GENERATED[name]()
     with open(f"{SYM_LIB}/{lib}.kicad_sym", encoding="utf-8") as f:
         text = f.read()
     blk = _block(text, name)

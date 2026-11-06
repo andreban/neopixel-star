@@ -17,7 +17,7 @@ is and how to order it, and [PLAN.md](PLAN.md) for why it is designed this way.
 
 ## Variants
 
-The same scripts build four boards, registered in `scripts/common/variants.py`:
+The same scripts build five boards, registered in `scripts/common/variants.py`:
 
 | Variant | Outputs | Scripts |
 |---|---|---|
@@ -25,6 +25,7 @@ The same scripts build four boards, registered in `scripts/common/variants.py`:
 | `hotplate/v1` | `hotplate/v1/kicad/`, `hotplate/v1/fab/`, `hotplate/v1/easyeda/`, `hotplate/v1/docs/` | `scripts/hotplate/v1/` |
 | `hotplate/v2` | `hotplate/v2/kicad/`, `hotplate/v2/fab/`, `hotplate/v2/easyeda/`, `hotplate/v2/docs/` | `scripts/hotplate/v2/` |
 | `tht` | `tht/kicad/`, `tht/fab/`, `tht/easyeda/`, `tht/docs/` | `scripts/tht/` |
+| `xiao` | `xiao/kicad/`, `xiao/fab/`, `xiao/easyeda/`, `xiao/docs/` | `scripts/xiao/` |
 
 Each variant's scripts are `parts.py` (the single source of truth for its parts, nets and BOM data),
 `layout.py` (placement and routing) and `schematic.py` (the sheet). Everything else is shared, in
@@ -33,12 +34,12 @@ variant must not alter the other's outputs.
 
 ## Everything is generated
 
-`smd/`, `hotplate/v1/`, `hotplate/v2/` and `tht/` hold **build outputs**, except their `README.md` files. Never hand-edit them: the
+`smd/`, `hotplate/v1/`, `hotplate/v2/`, `tht/` and `xiao/` hold **build outputs**, except their `README.md` files. Never hand-edit them: the
 next build overwrites the changes. Make changes in `scripts/`, then rebuild:
 
 ```sh
 python scripts/build_all.py          # all variants
-python scripts/build_all.py tht      # one variant (or prefix): smd, hotplate, hotplate/v1, hotplate/v2 or tht
+python scripts/build_all.py tht      # one variant (or prefix): smd, hotplate, hotplate/v1, hotplate/v2, tht or xiao
 ```
 
 A change is done only when this build finishes. It runs ERC, DRC and schematic parity, and **exits on
@@ -78,6 +79,8 @@ commit that churn on its own, separate from design changes.
 | `scripts/common/assembly.py` | Assembly drawings (`docs/assembly-*.svg`, `docs/assembly.pdf`): parts, pin 1 and references per side, read from the saved `.kicad_pcb`. Plain Python |
 | `scripts/common/pdf.py` | Minimal SVG → PDF for the assembly drawings (built-in Helvetica, no deps) |
 | `scripts/common/model_jst.py` | Generated VRML model for the SMD J1 (KiCad ships none) |
+| `scripts/common/xiao.py` | Generated footprint, symbol and VRML model for the Seeed XIAO in female headers (KiCad ships none). Parts with `lib="generated"` / `symbol="generated:..."` come from here |
+| `scripts/xiao/ring.py` | The XIAO board's LED ring (hot-plate v2's, scaled) |
 | `scripts/<variant>/parts.py` | That variant's parts: footprints, pin→net maps, values, LCSC/MPN, datasheets |
 | `scripts/<variant>/layout.py` | That variant's LED radii, placement, routing and artwork positions |
 | `scripts/<variant>/schematic.py` | That variant's schematic sheet |
@@ -140,6 +143,26 @@ offsets (`+v` = clockwise side of an LED) to board coordinates.
   the pour to get around the pad row.
 - **Front silkscreen** is kept (it's hand-assembled): a short flat-side line per LED, clear of the
   pads, plus the stock C1/R1 marks. The full LED outline is on F.Fab (the stock arcs overlap the pads).
+
+## Constraints that aren't obvious (XIAO)
+
+- **Front is hot-plate v2's.** Same LEDs, R1, C1 and via scheme; the LED radii and hop waypoints
+  are v2's scaled by `star_width / 50` (`scripts/xiao/ring.py`). Don't add paste parts to the back.
+- **Any XIAO must fit.** Only the 14 edge pins are used (`5V`, `GND`, `D3`; the rest are
+  no-connects). Don't add pads for one model's underside pads. Avoid `D8`/`D9` for new signals:
+  they are boot-strapping pins on the ESP32-C3 XIAO.
+- **In female headers, not flat.** A USB-C plug's overmold (about 12.5 × 6.5 mm) is centred on
+  the receptacle. On a flat module that centre is only ~2 mm off the board, so the plug runs into
+  the points beside whichever notch it faces, at any star size. The only fixes are a slot in the
+  outline (tried: at 75 mm it still made the logo unrecognisable) or a module overhanging the
+  edge by ~5 mm. The female headers plus the XIAO's male header plastic lift it 11 mm, clear of
+  everything, and make it removable. Back-side flips mirror in y in KiCad, so the footprint is
+  placed at 180° to put USB-C toward the top point.
+- **Size 60 mm.** At 55 mm the diagonal LEDs' silkscreen hits the corner pins and the USB-C
+  receptacle overhangs the top notches.
+- **Artwork on the front.** The module covers the back. The title is 0.9 mm (`title(..., size=0.9)`)
+  to fit between the bottom notch and the diagonal LEDs; the credit sits above the pin rows.
+- **Vias under the module** are fine: vias are tented on both sides.
 
 ## KiCad Python gotchas
 
