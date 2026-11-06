@@ -15,6 +15,7 @@ from common import config as C
 from common.geometry import star_segments, polyline
 from common.logo import logo_shapes, logo_bounds
 from common.model_jst import jst_ph_s3b_sm4_wrl
+from common import xiao
 from common.parts import uid, board_net
 from common import variants
 
@@ -48,6 +49,15 @@ def make_local_library():
     os.makedirs(local_lib(), exist_ok=True)
     for part in {p.footprint: p for p in V.parts.values()}.values():
         lib, name = part.lib, part.footprint
+        if lib == "generated":
+            # Not in KiCad's libraries: footprint and model written by our own code.
+            shapes = os.path.join(kicad_dir(), V.project + ".3dshapes")
+            os.makedirs(shapes, exist_ok=True)
+            with open(os.path.join(shapes, name + ".wrl"), "w", encoding="utf-8") as g:
+                g.write(xiao.wrl())
+            with open(os.path.join(local_lib(), name + ".kicad_mod"), "w", encoding="utf-8") as g:
+                g.write(xiao.footprint(f"${{KIPRJMOD}}/{V.project}.3dshapes/{name}.wrl"))
+            continue
         src = os.path.join(C.FP_LIB, lib + ".pretty", name + ".kicad_mod")
         with open(src, encoding="utf-8") as f:
             text = f.read()
@@ -93,7 +103,7 @@ class Board:
 
     # ---- primitives
     def net(self, name, ref=None, pad=None):
-        name = board_net(name, ref, pad, V.parts[ref].nc_pin_name if ref else None)
+        name = board_net(name, ref, pad, V.parts[ref].pin_name(pad) if ref else None)
         if name not in self.nets:
             n = pcbnew.NETINFO_ITEM(self.b, name)
             self.b.Add(n)
@@ -268,18 +278,20 @@ def logo(bd, top, width, front=False):
         add_gold(bd, tf(outline), [tf(h) for h in holes], front)
 
 
-def title(bd, y, front=False):
-    add_text(bd, "Modern Web Guidance", 0.0, y, 1.0, front=front)
+def title(bd, y, front=False, size=1.0):
+    add_text(bd, "Modern Web Guidance", 0.0, y, size, front=front)
 
 
-def credit(bd, y):
-    """"Created with ✨" / "by @andreban" on the back. The ✨ is a tiny gold copy
-    of the board outline, placed after "with" (at -x, since the text is mirrored)."""
-    t = add_text(bd, "Created with", 0.7, y, 0.85, thick=0.14)
+def credit(bd, y, front=False):
+    """"Created with ✨" / "by @andreban", on the back unless `front`. The ✨ is
+    a tiny gold copy of the board outline, placed after "with" (at -x on the
+    back, since the text is mirrored there)."""
+    m = 1 if front else -1
+    t = add_text(bd, "Created with", -m * 0.7, y, 0.85, thick=0.14, front=front)
     w = pcbnew.ToMM(t.GetBoundingBox().GetWidth())
-    sx, ss = 0.7 - w / 2 - 0.85, 1.15
-    add_gold(bd, [(sx + px, y + py) for px, py in polyline(star_segments(ss), 8)])
-    add_text(bd, "by @andreban", 0.0, y + 1.15, 0.85, thick=0.14)
+    sx, ss = -m * 0.7 + m * (w / 2 + 0.85), 1.15
+    add_gold(bd, [(sx + px, y + py) for px, py in polyline(star_segments(ss), 8)], front=front)
+    add_text(bd, "by @andreban", 0.0, y + 1.15, 0.85, thick=0.14, front=front)
 
 
 def pin_labels(bd, y, labels):

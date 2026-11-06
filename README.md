@@ -4,16 +4,17 @@ A star-shaped NeoPixel board in the spirit of the Adafruit Jewel. The outline is
 sparkle from the [Modern Web Guidance logo](reference/mwg-logo.svg), uniformly scaled. Nine
 addressable RGB LEDs: one in the centre, one in each of the 8 points.
 
-| SMD ([smd/](smd/README.md)) | Hot-plate ([hotplate/](hotplate/README.md): [v1](hotplate/v1/README.md) / [v2](hotplate/v2/README.md)) | Through-hole ([tht/](tht/README.md)) |
-|---|---|---|
-| ![SMD version](smd/docs/angle-front.png) | ![Hot-plate version](hotplate/v2/docs/angle-front.png) | ![Through-hole version](tht/docs/angle-front.png) |
-| 50 mm · 9 × WS2812B (5050) | 50 mm · 9 × WS2812B-Mini (3535) | 55 mm · 9 × WS2812D-F5 (5 mm) |
-| Fab-assembled, parts on both sides | Front reflowed on a hot plate, back soldered by iron | Hand-soldered |
-| 74AHCT1G125 level shifter, 100 nF per LED | 0603 passives; [v1](hotplate/v1/README.md) with level shifter, [v2](hotplate/v2/README.md) direct 3.3 V data | LEDs take 3.3 V data directly |
+| SMD ([smd/](smd/README.md)) | Hot-plate ([hotplate/](hotplate/README.md): [v1](hotplate/v1/README.md) / [v2](hotplate/v2/README.md)) | Through-hole ([tht/](tht/README.md)) | XIAO ([xiao/](xiao/README.md)) |
+|---|---|---|---|
+| ![SMD version](smd/docs/angle-front.png) | ![Hot-plate version](hotplate/v2/docs/angle-front.png) | ![Through-hole version](tht/docs/angle-front.png) | ![XIAO version](xiao/docs/angle-front.png) |
+| 50 mm · 9 × WS2812B (5050) | 50 mm · 9 × WS2812B-Mini (3535) | 55 mm · 9 × WS2812D-F5 (5 mm) | 60 mm · 9 × WS2812B-Mini (3535) |
+| Fab-assembled, parts on both sides | Front reflowed on a hot plate, back soldered by iron | Hand-soldered | Hot-plate front, Seeed XIAO plugged into female headers on the back |
+| 74AHCT1G125 level shifter, 100 nF per LED | 0603 passives; [v1](hotplate/v1/README.md) with level shifter, [v2](hotplate/v2/README.md) direct 3.3 V data | LEDs take 3.3 V data directly | Own microcontroller: plug in USB-C and program it |
 
 All versions share:
 
 - A JST-PH 2.0 mm 3-pin connector on the back, cable toward the top point, pins labelled `5V / DIN / GND`
+  (except the XIAO version, which has a USB-C microcontroller board there instead)
 - Yellow solder mask, black silkscreen, ENIG, with the MWG logo in exposed gold on the back
 - 2 layers, 1.6 mm. Front is a solid 5 V pour, back a solid GND pour
 - The same data order, so the same code drives any of them
@@ -22,6 +23,9 @@ All versions share:
 > schematic. None has been manufactured or tested yet. Treat the first order as a prototype run.
 
 ## Wiring
+
+The [XIAO version](xiao/README.md) needs none: it has its own microcontroller and USB-C. The others
+connect through J1:
 
 | J1 pin | Signal | Connect to |
 |---|---|---|
@@ -86,10 +90,10 @@ the project zipped for EasyEDA Pro (*File → Import → KiCad*) and the exact o
 
 | Path | Contents |
 |---|---|
-| `smd/`, `hotplate/v1/`, `hotplate/v2/`, `tht/` | One folder per version: `README.md`, `kicad/` (project and libraries), `fab/` (Gerbers, BOM, placement), `easyeda/`, `docs/` (renders, assembly drawings, schematic PDF) |
+| `smd/`, `hotplate/v1/`, `hotplate/v2/`, `tht/`, `xiao/` | One folder per version: `README.md`, `kicad/` (project and libraries), `fab/` (Gerbers, BOM, placement), `easyeda/`, `docs/` (renders, assembly drawings, schematic PDF) |
 | `scripts/` | Generators: everything in the version folders except the READMEs is built from these |
 | `scripts/common/` | Code shared by all versions: outline, logo, design rules, board and schematic helpers |
-| `scripts/smd/`, `scripts/hotplate/v1/`, `scripts/hotplate/v2/`, `scripts/tht/` | Per version: `parts.py` (parts and nets), `layout.py` (placement and routing), `schematic.py` |
+| `scripts/smd/`, `scripts/hotplate/v1/`, `scripts/hotplate/v2/`, `scripts/tht/`, `scripts/xiao/` | Per version: `parts.py` (parts and nets), `layout.py` (placement and routing), `schematic.py` |
 | `reference/` | The source logo SVG |
 | `PLAN.md` | Design decisions and their reasoning |
 | `AGENTS.md` | How to change the design (for AI agents and humans) |
@@ -101,7 +105,7 @@ installation directory.
 
 ```sh
 python scripts/build_all.py          # all versions
-python scripts/build_all.py tht      # one version: smd, hotplate, hotplate/v1, hotplate/v2 or tht
+python scripts/build_all.py tht      # one version: smd, hotplate, hotplate/v1, hotplate/v2, tht or xiao
 ```
 
 For each version, this regenerates the schematic and board, refills the pours with KiCad's zone

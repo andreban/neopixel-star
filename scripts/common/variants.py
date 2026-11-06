@@ -43,6 +43,10 @@ VARIANTS = {
     # so far that the top LED's leads end up under J1's housing. The 0.25 mm
     # pour clearance lets the pours pass between the staggered pads.
     "tht": Variant("tht", "neopixel-star-tht", "tht/", "NeoPixel Star (through-hole)", 55.0, 0.25, True),
+    # Hot-plate v2's front (V6 LEDs, R1, C1) with a Seeed XIAO on the back,
+    # plugged into female headers: USB-C in, firmware on board. 60 mm so the
+    # LED vias and the back hops clear the module's two pin rows.
+    "xiao": Variant("xiao", "neopixel-star-xiao", "xiao/", "NeoPixel Star (XIAO)", 60.0, 0.3, True),
 }
 ALL = tuple(VARIANTS)
 
