@@ -21,9 +21,17 @@ Assembly drawing, front and back, for printing: [docs/assembly.pdf](docs/assembl
 ## Which XIAO
 
 Any of them. All XIAO boards share the same 14 edge pins (`D0`–`D10`, `3V3`, `GND`, `5V`), and the
-board only uses three: `5V`, `GND` and `D3`. The BOM lists the **XIAO RP2040**, which is cheap and
-well supported in Arduino, MicroPython and CircuitPython. The XIAO RP2350, ESP32-C3/C6/S3 and
-nRF52840 work the same way. The pads some models have underneath aren't used.
+board only uses three: `5V`, `GND` and `D3`. The pads some models have underneath aren't used.
+
+The two Raspberry Pi ones are the obvious choice. Both are cheap and well supported in Arduino,
+MicroPython and CircuitPython:
+
+| XIAO | Seeed SKU | LCSC | `D3` is |
+|---|---|---|---|
+| RP2350 (in the BOM) | 102010550 | C41882923 | GPIO5 |
+| RP2040 | 102010428 | C22184628 | GPIO29 |
+
+The ESP32-C3/C6/S3 and nRF52840 XIAOs work the same way.
 
 ## How it differs from hot-plate v2
 
@@ -48,7 +56,7 @@ nRF52840 work the same way. The pads some models have underneath aren't used.
 | LED1–LED9 | front | Worldsemi WS2812B-MINI-V6, 3535 | C52941386 |
 | C1 | front | 10 µF 0603 X5R (Samsung CL10A106KP8NNNC) | C19702 |
 | R1 | front | 330 Ω 0603 (UNI-ROYAL 0603WAF3300T5E) | C23138 |
-| U1 | back | Seeed Studio XIAO RP2040 (102010428), or any XIAO | C22184628 |
+| U1 | back | Seeed Studio XIAO RP2350 (102010550), or XIAO RP2040 (102010428, C22184628), or any XIAO | C41882923 |
 | — | back | 2 × 1x7 female header, 2.54 mm, 8.5 mm tall (HCTL PM254-1-07-Z-8.5) | C2897370 |
 | — | on the XIAO | 2 × 1x7 male pin header, 2.54 mm, 2.5 mm plastic (HCTL PZ254-1-07-Z-8.5) | C2894930 |
 
@@ -94,8 +102,12 @@ void loop() {
 }
 ```
 
-In CircuitPython it's `neopixel.NeoPixel(board.D3, 9)`. In MicroPython on the XIAO RP2040, `D3` is
-GPIO29: `neopixel.NeoPixel(machine.Pin(29), 9)`.
+In CircuitPython it's `neopixel.NeoPixel(board.D3, 9)`. MicroPython uses GPIO numbers:
+
+```python
+neopixel.NeoPixel(machine.Pin(5), 9)   # XIAO RP2350
+neopixel.NeoPixel(machine.Pin(29), 9)  # XIAO RP2040
+```
 
 **Power:** the LEDs draw from USB through the XIAO's `5V` pin, up to about 540 mA at full white.
 That's more than a USB 2.0 port is required to supply, so cap the brightness (above) or with

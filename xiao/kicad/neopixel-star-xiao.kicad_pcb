@@ -3367,7 +3367,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Value" "XIAO RP2040"
+		(property "Value" "XIAO RP2350"
 			(at 0 0 0)
 			(layer "B.Fab")
 			(hide yes)
@@ -3380,7 +3380,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Datasheet" "https://wiki.seeedstudio.com/XIAO-RP2040/"
+		(property "Datasheet" "https://wiki.seeedstudio.com/getting-started-xiao-rp2350/"
 			(at 0 0 0)
 			(layer "B.Fab")
 			(hide yes)
@@ -3392,7 +3392,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Description" "Seeed Studio XIAO RP2040 in 2.54 mm female headers (any XIAO fits)"
+		(property "Description" "Seeed Studio XIAO RP2350 in 2.54 mm female headers (any XIAO fits)"
 			(at 0 0 0)
 			(layer "B.Fab")
 			(hide yes)
@@ -3404,7 +3404,7 @@
 				(justify mirror)
 			)
 		)
-		(property "LCSC" "C22184628"
+		(property "LCSC" "C41882923"
 			(at 0 0 0)
 			(layer "B.Fab")
 			(hide yes)
@@ -3417,7 +3417,7 @@
 				(justify mirror)
 			)
 		)
-		(property "MPN" "102010428"
+		(property "MPN" "102010550"
 			(at 0 0 0)
 			(layer "B.Fab")
 			(hide yes)

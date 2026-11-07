@@ -34,9 +34,9 @@ PARTS.update({
                "C23138", "0603WAF3300T5E", "UNI-ROYAL", "330 R 1% 0603, data series resistor"),
     # Back side, in two 1x7 2.54 mm female headers soldered with an iron after
     # the front is reflowed.
-    "U1": Part("generated", xiao.NAME, "XIAO RP2040", "generated:XIAO", XIAO_NETS,
-               "C22184628", "102010428", "Seeed Studio",
-               "Seeed Studio XIAO RP2040 in 2.54 mm female headers (any XIAO fits)",
-               "https://wiki.seeedstudio.com/XIAO-RP2040/",
+    "U1": Part("generated", xiao.NAME, "XIAO RP2350", "generated:XIAO", XIAO_NETS,
+               "C41882923", "102010550", "Seeed Studio",
+               "Seeed Studio XIAO RP2350 in 2.54 mm female headers (any XIAO fits)",
+               "https://wiki.seeedstudio.com/getting-started-xiao-rp2350/",
                pin_names={str(n): name for n, name in xiao.PIN_NAMES.items()}),
 })
